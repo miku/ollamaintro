@@ -2,6 +2,18 @@
 
 * A short disclaimer, first!
 
+# Overview
+
+We have a few parts:
+
+* Background
+* Ollama internals
+* **Example** Tokenization algorithm: BPE
+* Ollama customizations
+* Usage **example**: Similarity search
+* Usage **example**: Grep through handwritten notes
+* Wrap-up
+
 # Background
 
 * interest in NLP since early 2000s,
