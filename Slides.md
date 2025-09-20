@@ -22,4 +22,12 @@ Similar, popular, early project: [wordnet](https://en.wikipedia.org/wiki/WordNet
 > WordNet is a lexical database of semantic relations between words that links
 > words into semantic relations including synonyms, hyponyms, and meronyms.
 
+```sh
+$ sudo apt install wordnet
+$ wnb
+```
+
+![](static/screenshot-2025-09-20-170633-wordnet.png)
+
+
 
