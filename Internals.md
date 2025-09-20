@@ -88,6 +88,10 @@ See also: [GGUF](https://github.com/ggml-org/ggml/blob/master/docs/gguf.md)
 > traditionally developed using PyTorch or another framework, and then
 > converted to GGUF for use in GGML.
 
+Some format evolution:
+
+> GGML, GGMF, GGJT, and now GGUF — and it is now at **version three** of the format.
+
 ### Example: Reading a gguf file
 
 Random, example project:

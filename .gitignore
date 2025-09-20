@@ -34,3 +34,4 @@ go.work.sum
 scripts/1b
 scripts/words.txt
 static/gguf/SmolDocling-256M-preview-q8_0.gguf
+TODO.md
