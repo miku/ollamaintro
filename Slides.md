@@ -31,3 +31,7 @@ $ wnb
 
 ![WordNet Browser Hyponyms: train](static/screenshot-2025-09-20-170947-wordnet-train-hyponyms.png)
 
+Statistical approach, counting words, sparse representation, manual curation.
+Back then, there was an influencial paper about how more data wins over algorithms.
+
+![](static/screenshot-2025-09-20-171719-gemini-norvig-quote.png)
