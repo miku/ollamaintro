@@ -55,4 +55,39 @@ Disambiguation" (2001)
 > orders of magnitude greater than the largest training corpus previously used
 > for this problem.
 
-Sidenote:
+You can generate 1B words in a few seconds today:
+
+```
+$ perf stat -r 1 -B ./1b > words.txt && du -h words.txt
+
+ Performance counter stats for './1b':
+
+          6,588.00 msec task-clock                       #    1.005 CPUs utilized
+             4,216      context-switches                 #  639.951 /sec
+                19      cpu-migrations                   #    2.884 /sec
+               100      page-faults                      #   15.179 /sec
+     6,480,220,375      cpu_atom/cycles/                 #    0.984 GHz                         (0.11%)
+    24,934,230,875      cpu_core/cycles/                 #    3.785 GHz                         (99.45%)
+     9,898,653,980      cpu_atom/instructions/           #    1.53  insn per cycle              (0.27%)
+   122,415,155,922      cpu_core/instructions/           #    4.91  insn per cycle              (99.45%)
+     2,911,671,826      cpu_atom/branches/               #  441.966 M/sec                       (0.35%)
+    26,063,374,535      cpu_core/branches/               #    3.956 G/sec                       (99.45%)
+        39,141,727      cpu_atom/branch-misses/          #    1.34% of all branches             (0.53%)
+         4,678,785      cpu_core/branch-misses/          #    0.02% of all branches             (99.45%)
+             TopdownL1 (cpu_core)                 #     10.6 %  tma_backend_bound
+                                                  #      0.8 %  tma_bad_speculation
+                                                  #     13.0 %  tma_frontend_bound
+                                                  #     75.7 %  tma_retiring             (99.45%)
+             TopdownL1 (cpu_atom)                 #     16.6 %  tma_bad_speculation
+                                                  #     30.4 %  tma_retiring             (0.55%)
+                                                  #     17.1 %  tma_backend_bound
+                                                  #     35.9 %  tma_frontend_bound       (0.47%)
+
+       6.556773774 seconds time elapsed
+
+       5.171633000 seconds user
+       1.444366000 seconds sys
+
+
+4.7G    words.txt
+```
