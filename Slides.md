@@ -27,7 +27,7 @@ $ sudo apt install wordnet
 $ wnb
 ```
 
-![](static/screenshot-2025-09-20-170633-wordnet.png)
+![WordNet Browser Overview: go](static/screenshot-2025-09-20-170918-wordnet-go.png)
 
-
+![WordNet Browser Hyponyms: train](static/screenshot-2025-09-20-170947-wordnet-train-hyponyms.png)
 
