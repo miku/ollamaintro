@@ -1,0 +1,2 @@
+# ollamaintro
+Ollama intro workshop
