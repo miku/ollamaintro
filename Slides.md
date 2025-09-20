@@ -17,4 +17,9 @@ at Leipzig University
 
 ![](static/dornseiff-page.png)
 
+Similar, popular, early project: [wordnet](https://en.wikipedia.org/wiki/WordNet):
+
+> WordNet is a lexical database of semantic relations between words that links
+> words into semantic relations including synonyms, hyponyms, and meronyms.
+
 
