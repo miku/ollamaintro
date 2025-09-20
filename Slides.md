@@ -4,8 +4,17 @@
 
 # Background
 
-* interest in NLP since early 2000s, [wortschatz](https://wortschatz-leipzig.de/en) at Leipzig University
+* interest in NLP since early 2000s,
+  [wortschatz](https://wortschatz-leipzig.de/en)
+([ex](https://dict.wortschatz-leipzig.de/en/res?corpusId=eng_news_2024&word=Uffizi+Gallery))
+at Leipzig University
 
-![](static/9783110002874-de.jpg)
+![Picture of a book: Dornseiff dictionary](static/9783110002874-de.jpg)
+
+> 1933/34 unter dem Titel *Der deutsche Wortschatz synonymisch geordnet.* --
+> [Dornseiff - Der deutsche Wortschatz nach
+> Sachgruppen](https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/4961/file/Storjohann_Dornseiff_Der_deutsche_Wortschatz_nach_Sachgruppen_2012.pdf)
+
+![](static/dornseiff-page.png)
 
 
