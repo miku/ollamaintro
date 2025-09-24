@@ -14,8 +14,9 @@ There are numerous other tools to run models locally:
 * [vllm](https://github.com/vllm-project/vllm) (used by various cloud services)
 * [OpenLLM](https://github.com/bentoml/OpenLLM)
 
-Currently, of the [25809 repositories](https://github.com/topics/llm) on GitHub
-tagged [llm], ollama seems to be among the top.
+And even more user interfaces of various kinds.
 
+As of 09/2025, of the [25809 repositories](https://github.com/topics/llm) on GitHub
+tagged [llm], ollama seems to be among the top ten.
 
 

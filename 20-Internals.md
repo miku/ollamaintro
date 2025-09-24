@@ -19,6 +19,8 @@ The ollama project maintains a registry, which is modelled after docker. With a
 bit of work, you can run your own registry (cf.
 [#2388](https://github.com/ollama/ollama/issues/2388#issuecomment-1989307410)).
 
+However, you can download files from other servers, too.
+
 ## Ollama model location
 
 * model files reside under a dot folder (depending on platform)
@@ -158,7 +160,184 @@ $ cat /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library/gemm
 }
 ```
 
+A sampling of the media types:
 
+```
+$ find /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library -type f | \
+    xargs jq -rc '.layers[].mediaType' | sort | uniq -c | sort -nr
+
+     45 application/vnd.ollama.image.model
+     41 application/vnd.ollama.image.license
+     36 application/vnd.ollama.image.params
+     35 application/vnd.ollama.image.template
+      8 application/vnd.ollama.image.system
+      4 application/vnd.ollama.image.projector
+```
+
+### MediaType: model
+
+See: [22-GGUF.md](22-GGUF.md)
+
+### MediaType: licence
+
+```
+$ find /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library -type f | \
+    xargs jq -rc '.layers[] | select(.mediaType == "application/vnd.ollama.image.license") | .digest'  | shuf -n 10
+
+sha256:832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e
+sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+sha256:43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1
+sha256:dd084c7d92a3c1c14cc09ae77153b903fd2024b64a100a0cc8ec9316063d2dbc
+sha256:43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1
+sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+sha256:3e2c24001f9ef57bf7ec959a3658fbb49cdad113cdf394c264da9d16f9bdd132
+sha256:43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1
+sha256:a406579cd136771c705c521db86ca7d60a6f3de7c9b5460e6193a2df27861bde
+sha256:2e68075caee4c571d43cb9d8d636415d8fe0fe59f695370cf56bc9f872f1ff3f
+```
+
+Example license:
+
+```
+$ cat /usr/share/ollama/.ollama/models/blobs/sha256-832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e | head
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+```
+
+
+### MediaType: params
+
+```
+$ find /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library -type f | \
+    xargs jq -rc '.layers[] | select(.mediaType == "application/vnd.ollama.image.params") | .digest'  | shuf -n 10
+
+sha256:832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e
+sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+sha256:43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1
+sha256:dd084c7d92a3c1c14cc09ae77153b903fd2024b64a100a0cc8ec9316063d2dbc
+sha256:43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1
+sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+sha256:3e2c24001f9ef57bf7ec959a3658fbb49cdad113cdf394c264da9d16f9bdd132
+sha256:43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1
+sha256:a406579cd136771c705c521db86ca7d60a6f3de7c9b5460e6193a2df27861bde
+sha256:2e68075caee4c571d43cb9d8d636415d8fe0fe59f695370cf56bc9f872f1ff3f
+```
+
+Example params:
+
+```
+$ cat /usr/share/ollama/.ollama/models/blobs/sha256-339e884a40f6708bc761d367f0c08e448d5bb6f16b3961c340e44e0e4835a004 | jq .
+{
+  "stop": [
+    "<end_of_turn>"
+  ],
+  "top_k": 64,
+  "top_p": 0.95
+}
+
+$ cat /usr/share/ollama/.ollama/models/blobs/sha256-e0daf17ff83eace4813f9e8554b262f6cc33ad880ff8df41a156ff9ef5522ddb | jq .
+{
+  "temperature": 0.15
+}
+```
+
+Typical parameters:
+
+```
+$ ollama ls  | grep -v NAME | awk '{print $1}' | \
+    xargs -I {} ollama show --parameters {} | sort  | awk '{print $1}' | uniq -c | sort -nr
+     44 stop
+     24 temperature
+     15 top_p
+     12 top_k
+     12
+      7 num_ctx
+      5 repeat_penalty
+      2 min_p
+      1 num_keep
+```
+
+
+
+### MediaType: system
+
+A system prompt.
+
+```shell
+$ cat /usr/share/ollama/.ollama/models/blobs/sha256-70a4dab5e1d14953cc95c7d4ee1003f05c2474a39cd07fef2f8975c776455d33
+
+You are Mistral Small 3.1, a Large Language Model (LLM) created by Mistral AI,
+a French startup headquartered in Paris.  You power an AI assistant called Le
+Chat.  Your knowledge base was last updated on 2023-10-01.
+
+When you're not sure about some information, you say that you don't have the
+information and don't make up anything.  If the user's question is not clear,
+ambiguous, or does not provide enough context for you to accurately answer the
+question, you do not try to answer it right away and you rather ask the user to
+clarify their request (e.g. "What are some good restaurants around me?" =>
+"Where are you?" or "When is the next flight to Tokyo" => "Where do you travel
+from?").  You are always very attentive to dates, in particular you try to
+resolve dates (e.g. "yesterday" is {yesterday}) and when asked about
+information at specific dates, you discard information that is at another date.
+You follow these instructions in all languages, and always respond to the user
+in the language they use or request.  Next sections describe the capabilities
+that you have.
+
+# WEB BROWSING INSTRUCTIONS
+
+You cannot perform any web search or access internet to open URLs, links etc.
+If it seems like the user is expecting you to do so, you clarify the situation
+and ask the user to copy paste the text directly in the chat.
+
+# MULTI-MODAL INSTRUCTIONS
+
+You have the ability to read images, but you cannot generate images. You also
+cannot transcribe audio files or videos.
+```
+
+Or just:
+
+```
+$ cat /usr/share/ollama/.ollama/models/blobs/sha256-75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de
+You are a helpful assistant.
+```
+
+### MediaType: projector
+
+
+
+### ollama show
+
+Display model properties and parameters with show subcommand:
+
+```
+$ ollama show gemma3:4b-it-qat
+  Model
+    architecture        gemma3
+    parameters          4.3B
+    context length      131072
+    embedding length    2560
+    quantization        Q4_0
+
+  Capabilities
+    completion
+    vision
+
+  Parameters
+    top_p          0.95
+    stop           "<end_of_turn>"
+    temperature    1
+    top_k          64
+
+```
 
 
 ## Ollama Codebase
