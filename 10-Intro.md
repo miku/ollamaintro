@@ -103,9 +103,9 @@ $ perf stat -r 1 -B ./1b > words.txt && du -h words.txt
 4.7G    words.txt
 ```
 
-## Some milestones
+## Some events and milestones
 
-Cf. [arxiv sanity](https://github.com/karpathy/arxiv-sanity-preserver);
+Cf. [arxiv sanity](https://github.com/karpathy/arxiv-sanity-preserver) (2016)
 
 ![](static/wayback-arxiv-sanity.png)
 
@@ -116,11 +116,20 @@ On the research side:
 * 2014 fasttext (subword tokens)
 * 2017 attention is all you need (no more recurrence, "transformer")
 * 2018 BERT (comprehension) and original GPT-1 (generation)
+
+...
+
+> By the end of 2018, the field of NLP was about to undergo another
+seismic change, marking the beginning of the era of foundation models -- [On
+the Opportunities and Risks of Foundation
+Models](https://arxiv.org/pdf/2108.07258)
+
 * 2019 Language models are unsupervised multitask learners
 * 2019 "bitter lesson"
-* 2020 LM are few shot learners
+* 2020 Language models are few shot learners
 * 2020 "scaling laws"
 * 2021 A General Language Assistant as a Laboratory for Alignment
+* 2021 On the Opportunities and Risks of Foundation Models
 * 2022 LLM are zero shot learners
 * ...
 
@@ -133,5 +142,16 @@ On the tooling/data side:
 * 2018 jax, `pytorch_pretrained_bert` (later renamed HF transformers)
 * 2020 "the pile" (800gb dataset)
 * ...
+* 2022-09-18 ggml (initial release)
+* 2023-03-10 llama.cpp (initial release)
+* 2023-07-20 ollama (initial release, support for two models)
 
-And numerous more.
+And numerous more...
+
+> Personal discoveries:
+
+* 2023-02-14, I ask a question on how long before we can run things locally at the [Leipzig Python User Group](https://lpug.github.io/) -- personally, I expected 2-5 years timeline
+* 2023-04-18, we discuss C/GO and ggml (ai-on-the-edge) at [Leipzig Gophers #35](https://golangleipzig.space/posts/meetup-35-wrapup/)
+* 2023-07-20, [ollama](https://ollama.ai) is released (with two models), [HN](https://news.ycombinator.com/item?id=36802582)
+* 2023-11-21, today, 43 models (each with a couple of tags/versions)
+
