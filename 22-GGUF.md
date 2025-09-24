@@ -14,6 +14,7 @@ Some format evolution:
 
 > GGML, GGMF, GGJT, and now GGUF — and it is now at **version three** of the format.
 
+Full description: [gguf.md](https://github.com/ggml-org/ggml/blob/master/docs/gguf.md)
 
 ## Format overview
 
@@ -37,7 +38,6 @@ Mixtral-8x7B-v0.1-KQ2.gguf
 Hermes-2-Pro-Llama-3-8B-F16.gguf
 Grok-100B-v1.0-Q4_0-00003-of-00009.gguf
 ```
-
 
 ## readgguf
 
