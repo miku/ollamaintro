@@ -41,13 +41,13 @@ func NewMatrix(rows, cols int) *Matrix {
 func calculateQuantizationParams(minVal, maxVal float32) QuantizationParams {
 	// For int8: range is -128 to 127 (256 possible values)
 	const qMin, qMax int8 = -128, 127
-	const qRange = float32(qMax - qMin)
+	const qRange = float32(256) // 256 possible values in int8
 
 	// Calculate scale: how much each quantized unit represents in float space
 	scale := (maxVal - minVal) / qRange
 
 	// Calculate zero point: where 0.0 maps to in quantized space
-	zeroPoint := int8(math.Round(float64(qMin - minVal/scale)))
+	zeroPoint := int8(math.Round(float64(float32(qMin) - minVal/scale)))
 
 	// Clamp zero point to valid range
 	if zeroPoint < qMin {
