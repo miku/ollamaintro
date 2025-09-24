@@ -124,6 +124,8 @@ On the research side:
 * 2022 LLM are zero shot learners
 * ...
 
+List of open llms: [open-llms](https://github.com/eugeneyan/open-llms?tab=readme-ov-file#open-llms)
+
 On the tooling/data side:
 
 * 2015 tensorflow, keras

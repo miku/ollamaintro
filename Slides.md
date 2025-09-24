@@ -1,8 +1,9 @@
 # Overview
 
-* [Intro](Intro.md)
-* [Ollama internals](Internals.md)
-* [Ollama customizations](Customizations.md)
-* [Ex: Similarity search](SimSearch.md)
-* [Ex: Note grep](NoteGrep.md)
-* [Outro](Outro.md)
+* [Intro](10-Intro.md)
+* [Ollama internals](20-Internals.md)
+    * [GGUF](22-GGUF.md)
+* [Ollama customizations](30-Customizations.md)
+* [Ex: Similarity search](40-SimSearch.md)
+* [Ex: Note grep](50-NoteGrep.md)
+* [Outro](60-Outro.md)
