@@ -2,7 +2,7 @@
 
 ## Overview
 
-Ollama does a few things for convenience:
+Ollama covers a few aspects of the LLM inference life cycle:
 
 * manage **model life cycle**: download, store, customize, publish, remove
 * **interactive chat**
@@ -176,6 +176,8 @@ $ find /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library -ty
 
 ### MediaType: model
 
+The actual model, here in GGUF format. It includes metadata and the network layers.
+
 See: [22-GGUF.md](22-GGUF.md)
 
 ### MediaType: licence
@@ -266,7 +268,6 @@ $ ollama ls  | grep -v NAME | awk '{print $1}' | \
 ```
 
 
-
 ### MediaType: system
 
 A system prompt.
@@ -312,11 +313,22 @@ You are a helpful assistant.
 
 ### MediaType: projector
 
+GGUF file, component for vision models.
+
+```
+📋 Model Metadata
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+General:
+  general.description │ image encoder for LLaVA
+  general.name        │ siglip-model
+...
+```
 
 
-### ollama show
+## Getting quick model info
 
-Display model properties and parameters with show subcommand:
+Display model properties and parameters with `ollama show` subcommand:
 
 ```
 $ ollama show gemma3:4b-it-qat
@@ -338,6 +350,12 @@ $ ollama show gemma3:4b-it-qat
     top_k          64
 
 ```
+
+Extended help:
+
+
+
+
 
 
 ## Ollama Codebase
