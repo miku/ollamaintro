@@ -53,3 +53,6 @@ versions](https://huggingface.co/Mungert/SmolDocling-256M-preview-GGUF/tree/main
 $ curl -sLo SmolDocling-256M-preview-q8_0.gguf "https://huggingface.co/Mungert/SmolDocling-256M-preview-GGUF/resolve/main/SmolDocling-256M-preview-q8_0.gguf?download=true"
 ```
 
+## Quantization
+
+* [Blind testing different quants](https://github.com/ggml-org/llama.cpp/discussions/5962)
