@@ -48,4 +48,95 @@ Disambiguation" (2001)
 > We collected a **1-billion-word** training corpus from a variety of English
 > texts, including news articles, scientific abstracts, government transcripts,
 > literature and other varied forms of prose. This training corpus is three
+> orders of magnitude greater than the largest training corpus previously used
+> for this problem.
+
+You can generate 1B words in a few seconds today:
+
+```
+$ perf stat -r 1 -B ./1b > words.txt && du -h words.txt
+
+ Performance counter stats for './1b':
+
+          6,588.00 msec task-clock                       #    1.005 CPUs utilized
+             4,216      context-switches                 #  639.951 /sec
+                19      cpu-migrations                   #    2.884 /sec
+               100      page-faults                      #   15.179 /sec
+     6,480,220,375      cpu_atom/cycles/                 #    0.984 GHz                         (0.11%)
+    24,934,230,875      cpu_core/cycles/                 #    3.785 GHz                         (99.45%)
+     9,898,653,980      cpu_atom/instructions/           #    1.53  insn per cycle              (0.27%)
+   122,415,155,922      cpu_core/instructions/           #    4.91  insn per cycle              (99.45%)
+     2,911,671,826      cpu_atom/branches/               #  441.966 M/sec                       (0.35%)
+    26,063,374,535      cpu_core/branches/               #    3.956 G/sec                       (99.45%)
+        39,141,727      cpu_atom/branch-misses/          #    1.34% of all branches             (0.53%)
+         4,678,785      cpu_core/branch-misses/          #    0.02% of all branches             (99.45%)
+             TopdownL1 (cpu_core)                 #     10.6 %  tma_backend_bound
+                                                  #      0.8 %  tma_bad_speculation
+                                                  #     13.0 %  tma_frontend_bound
+                                                  #     75.7 %  tma_retiring             (99.45%)
+             TopdownL1 (cpu_atom)                 #     16.6 %  tma_bad_speculation
+                                                  #     30.4 %  tma_retiring             (0.55%)
+                                                  #     17.1 %  tma_backend_bound
+                                                  #     35.9 %  tma_frontend_bound       (0.47%)
+
+       6.556773774 seconds time elapsed
+
+       5.171633000 seconds user
+       1.444366000 seconds sys
+
+
+4.7G    words.txt
+```
+
+## Some events and milestones
+
+Cf. [arxiv sanity](https://github.com/karpathy/arxiv-sanity-preserver) (2016)
+
+![](static/wayback-arxiv-sanity.png)
+
+On the research side:
+
+* 2003 "a neural probabilistic language model" (Y. Bengio et al.)
+* 2013 word2vec (dense static vectors)
+* 2014 fasttext (subword tokens)
+* 2017 attention is all you need (no more recurrence, "transformer")
+* 2018 BERT (comprehension) and original GPT-1 (generation)
+
+...
+
+> By the end of 2018, the field of NLP was about to undergo another
+seismic change, marking the beginning of the era of foundation models -- [On
+the Opportunities and Risks of Foundation
+Models](https://arxiv.org/pdf/2108.07258)
+
+* 2019 Language models are unsupervised multitask learners
+* 2019 "bitter lesson"
+* 2020 Language models are few shot learners
+* 2020 "scaling laws"
+* 2021 A General Language Assistant as a Laboratory for Alignment
+* 2021 On the Opportunities and Risks of Foundation Models
+* 2022 LLM are zero shot learners
+* ...
+
+List of open llms: [open-llms](https://github.com/eugeneyan/open-llms?tab=readme-ov-file#open-llms)
+
+On the tooling/data side:
+
+* 2015 tensorflow, keras
+* 2016 pytorch
+* 2018 jax, `pytorch_pretrained_bert` (later renamed HF transformers)
+* 2020 "the pile" (800gb dataset)
+* ...
+* 2022-09-18 ggml (initial release)
+* 2023-03-10 llama.cpp (initial release)
+* 2023-07-20 ollama (initial release, support for two models)
+
+And numerous more...
+
+> Personal discoveries:
+
+* 2023-02-14, I ask a question on how long before we can run things locally at the [Leipzig Python User Group](https://lpug.github.io/) -- personally, I expected 2-5 years timeline
+* 2023-04-18, we discuss C/GO and ggml (ai-on-the-edge) at [Leipzig Gophers #35](https://golangleipzig.space/posts/meetup-35-wrapup/)
+* 2023-07-20, [ollama](https://ollama.ai) is released (with two models), [HN](https://news.ycombinator.com/item?id=36802582)
+* 2023-11-21, today, 43 models (each with a couple of tags/versions)
 
