@@ -141,3 +141,13 @@ And numerous more...
 * 2023-11-21, 43 models (each with a couple of tags/versions)
 * 2025-10-05, 100+ models, finetunes, language and multimodal models
 
+
+## What makes local LLM more practical?
+
+* quantization techniques
+
+> A research field, Quantization in deep learning, aim to reduce the high cost
+> of computations and memory by representing the weights and activation in deep
+> learning models with low precision data types. -- [A Comprehensive Study on Quantization Techniques for Large Language Models](https://arxiv.org/pdf/2411.02530v1)
+
+* efficient formats (GGUF)
