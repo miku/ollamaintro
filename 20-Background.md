@@ -144,10 +144,14 @@ And numerous more...
 
 ## What makes local LLM more practical?
 
-* quantization techniques
+* quantization techniques, cf. [quantization](https://huggingface.co/docs/transformers/v4.56.2/quantization/overview)
 
 > A research field, Quantization in deep learning, aim to reduce the high cost
 > of computations and memory by representing the weights and activation in deep
 > learning models with low precision data types. -- [A Comprehensive Study on Quantization Techniques for Large Language Models](https://arxiv.org/pdf/2411.02530v1)
+
+![](static/model-size-increase-2017-2022.png)
+
+From [SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models](https://arxiv.org/pdf/2211.10438)
 
 * efficient formats (GGUF)
