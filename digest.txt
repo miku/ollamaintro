@@ -1,9 +1,23 @@
 Directory structure:
 └── ollamaintro/
     ├── README.md
-    ├── go.mod
-    ├── go.sum
-    ├── LICENSE
+    ├── 10-Intro.md
+    ├── 20-Background.md
+    ├── 30-Architecture.md
+    ├── 32-Server.md
+    ├── 34-Runner.md
+    ├── 36-Tokenization.md
+    ├── 40-Model-Lifecycle.md
+    ├── 42-Model-Types.md
+    ├── 44-Params.md
+    ├── 45-Templates.md
+    ├── 46-GGUF.md
+    ├── 48-Modelfile.md
+    ├── 50-API.md
+    ├── 60-Request-Trace.md
+    ├── 80-SimSearch.md
+    ├── 90-VisualGrep.md
+    ├── 99-Outro.md
     ├── Refs.md
     ├── Slides.md
     ├── attic/
@@ -17,15 +31,12 @@ Directory structure:
     │   ├── 40-SimilaritySearch.md
     │   ├── 50-Vgrep.md
     │   └── 60-Wrapup.md
-    ├── cmd/
-    │   └── readgguf/
-    │       └── main.go
-    ├── scripts/
-    │   ├── 1b.go
-    │   └── Makefile
+    ├── extra/
+    │   ├── ModelFormats.md
+    │   └── Quantization.md
     └── x/
-        └── quantization/
-            └── main.go
+        └── seq/
+            └── README.md
 
 ================================================
 FILE: README.md
@@ -56,71 +67,616 @@ tagged [llm], ollama seems to be among the top ten.
 
 
 ================================================
-FILE: go.mod
+FILE: 10-Intro.md
 ================================================
-module github.com/miku/ollamaintro
+# Intro
 
-go 1.25.1
+## Quick poll
 
-require github.com/ollama/ollama v0.12.0
+* [ ] Who has already used Ollama?
+* [ ] Who has run an LLM locally?
+* [ ] Who has worked with model APIs before?
 
-require (
-	github.com/fatih/color v1.18.0 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
-	golang.org/x/sys v0.31.0 // indirect
-)
+## Workshop goals
+
+* [ ] Better understanding how Ollama works under the hood
+* [ ] Learn about Model lifecycle and customization
+* [ ] Build practical applications with embeddings in Go
+* [ ] Create a visual search tool for handwritten notes
+
+## Local and remote machine setup
+
+* Install ollama on your laptop, you can follow the instructions here: [https://ollama.com/download](https://ollama.com/download)
+* We will have access to a cloud GPU server instance, running a RTX 4000 SFF GPU with 20GB VRAM (an efficient GPU, that consumes at most 70W)
+
+Most examples will work well on Linux and MacOS, but Windows WSL should also
+work.
+
+## Checkpoint: installation
+
+```
+$ ollama --version
+$ ollama ls
+$ curl localhost:11434
+```
+
+## Workshop material
+
+All material available on
+[github.com/miku/ollamaintro](https://github.com/miku/ollamaintro). Please
+clone, as if contains also code examples and project scaffolding.
+
+
 
 
 
 ================================================
-FILE: go.sum
+FILE: 20-Background.md
 ================================================
-github.com/fatih/color v1.18.0 h1:S8gINlzdQ840/4pfAwic/ZE0djQEH3wM94VfqLTZcOM=
-github.com/fatih/color v1.18.0/go.mod h1:4FelSpRwEGDpQ12mAdzqdOukCy4u8WUtOY6lkT/6HfU=
-github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
-github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
-github.com/mattn/go-colorable v0.1.13 h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=
-github.com/mattn/go-colorable v0.1.13/go.mod h1:7S9/ev0klgBDR4GtXTXX8a3vIGJpMovkB8vQcUbaXHg=
-github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
-github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
-github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/ollama/ollama v0.12.0 h1:BRry7G2Skz7Mu+E6rz40tzBXNbLTEhheGT8umc1zvxo=
-github.com/ollama/ollama v0.12.0/go.mod h1:9+1//yWPsDE2u+l1a5mpaKrYw4VdnSsRU3ioq5BvMms=
-golang.org/x/sync v0.12.0 h1:MHc5BpPuC30uJk597Ri8TV3CNZcTLu6B6z4lJy+g6Jw=
-golang.org/x/sync v0.12.0/go.mod h1:1dzgHSNfp02xaA81J2MS99Qcpr2w7fw1gpm99rleRqA=
-golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.31.0 h1:ioabZlmFYtWhL+TRYpcnNlLwhyxaM9kWTDEmfnprqik=
-golang.org/x/sys v0.31.0/go.mod h1:BJP2sWEmIv4KK5OTEluFJCKSidICx8ciO85XgH3Ak8k=
+# Background
+
+* interest in NLP since early 2000s,
+  [wortschatz](https://wortschatz-leipzig.de/en)
+([ex](https://dict.wortschatz-leipzig.de/en/res?corpusId=eng_news_2024&word=Uffizi+Gallery))
+at Leipzig University
+
+![Picture of a book: Dornseiff dictionary](static/9783110002874-de.jpg)
+
+> 1933/34 unter dem Titel *Der deutsche Wortschatz synonymisch geordnet.* --
+> [Dornseiff - Der deutsche Wortschatz nach
+> Sachgruppen](https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/4961/file/Storjohann_Dornseiff_Der_deutsche_Wortschatz_nach_Sachgruppen_2012.pdf)
+
+![](static/dornseiff-page.png)
+
+Similar, popular, early project: [wordnet](https://en.wikipedia.org/wiki/WordNet):
+
+> WordNet is a lexical database of semantic relations between words that links
+> words into semantic relations including synonyms, hyponyms, and meronyms.
+
+```sh
+$ sudo apt install wordnet
+$ wnb
+```
+
+![WordNet Browser Overview: go](static/screenshot-2025-09-20-170918-wordnet-go.png)
+
+![WordNet Browser Hyponyms: train](static/screenshot-2025-09-20-170947-wordnet-train-hyponyms.png)
+
+Statistical approach, counting words, sparse representation (bag-of-words), manual curation.
+
+![](static/screenshot-2025-09-20-171719-gemini-norvig-quote.png)
+
+Back then, there was an influencial paper about how more data wins over
+algorithms, let me quickly ask an LLM which paper it was?
+
+![](static/screenshot-2025-09-20-172118-claude-scaling-2001.png)
+
+A few open weights LLMs struggle a bit with this question, but [Meta Llama 3.3
+70B Instruct](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct)
+(released December 6, 2024) seems to remember it.
+
+![](static/screenshot-2025-09-20-172808-chatai-meta-llama3.3-70B-scaling-2001.png)
+
+The paper was called: "Scaling to Very Very Large Corpora for Natural Language
+Disambiguation" (2001)
+
+> We collected a **1-billion-word** training corpus from a variety of English
+> texts, including news articles, scientific abstracts, government transcripts,
+> literature and other varied forms of prose. This training corpus is three
+> orders of magnitude greater than the largest training corpus previously used
+> for this problem.
+
+You can generate 1B words in a few seconds today:
+
+```
+$ perf stat -r 1 -B ./1b > words.txt && du -h words.txt
+
+ Performance counter stats for './1b':
+
+          6,588.00 msec task-clock                       #    1.005 CPUs utilized
+             4,216      context-switches                 #  639.951 /sec
+                19      cpu-migrations                   #    2.884 /sec
+               100      page-faults                      #   15.179 /sec
+     6,480,220,375      cpu_atom/cycles/                 #    0.984 GHz                         (0.11%)
+    24,934,230,875      cpu_core/cycles/                 #    3.785 GHz                         (99.45%)
+     9,898,653,980      cpu_atom/instructions/           #    1.53  insn per cycle              (0.27%)
+   122,415,155,922      cpu_core/instructions/           #    4.91  insn per cycle              (99.45%)
+     2,911,671,826      cpu_atom/branches/               #  441.966 M/sec                       (0.35%)
+    26,063,374,535      cpu_core/branches/               #    3.956 G/sec                       (99.45%)
+        39,141,727      cpu_atom/branch-misses/          #    1.34% of all branches             (0.53%)
+         4,678,785      cpu_core/branch-misses/          #    0.02% of all branches             (99.45%)
+             TopdownL1 (cpu_core)                 #     10.6 %  tma_backend_bound
+                                                  #      0.8 %  tma_bad_speculation
+                                                  #     13.0 %  tma_frontend_bound
+                                                  #     75.7 %  tma_retiring             (99.45%)
+             TopdownL1 (cpu_atom)                 #     16.6 %  tma_bad_speculation
+                                                  #     30.4 %  tma_retiring             (0.55%)
+                                                  #     17.1 %  tma_backend_bound
+                                                  #     35.9 %  tma_frontend_bound       (0.47%)
+
+       6.556773774 seconds time elapsed
+
+       5.171633000 seconds user
+       1.444366000 seconds sys
+
+
+4.7G    words.txt
+```
+
+## Some events and milestones
+
+Cf. [arxiv sanity](https://github.com/karpathy/arxiv-sanity-preserver) (2016)
+
+![](static/wayback-arxiv-sanity.png)
+
+On the research side:
+
+* 2003 "a neural probabilistic language model" (Y. Bengio et al.)
+* 2013 word2vec (dense static vectors)
+* 2014 fasttext (subword tokens)
+* 2017 attention is all you need (no more recurrence, "transformer")
+* 2018 BERT (comprehension) and original GPT-1 (generation)
+
+...
+
+> By the end of 2018, the field of NLP was about to undergo another
+seismic change, marking the beginning of the era of foundation models -- [On
+the Opportunities and Risks of Foundation
+Models](https://arxiv.org/pdf/2108.07258)
+
+* 2019 Language models are unsupervised multitask learners
+* 2019 "bitter lesson"
+* 2020 Language models are few shot learners
+* 2020 "scaling laws"
+* 2021 A General Language Assistant as a Laboratory for Alignment
+* 2021 On the Opportunities and Risks of Foundation Models
+* 2022 LLM are zero shot learners
+* ...
+
+List of open llms: [open-llms](https://github.com/eugeneyan/open-llms?tab=readme-ov-file#open-llms)
+
+On the tooling/data side:
+
+* 2015 tensorflow, keras
+* 2016 pytorch
+* 2018 jax, `pytorch_pretrained_bert` (later renamed HF transformers)
+* 2020 "the pile" (800gb dataset)
+* ...
+* 2022-09-18 ggml (initial release)
+* 2023-03-10 llama.cpp (initial release)
+* 2023-07-20 ollama (initial release, support for two models)
+
+And numerous more...
+
+> Personal timeline:
+
+* 2023-02-14, I ask a question on how long before we can run things locally at the [Leipzig Python User Group](https://lpug.github.io/) -- personally, I expected 2-5 years timeline
+* 2023-04-18, we discuss C/GO and ggml (ai-on-the-edge) at [Leipzig Gophers #35](https://golangleipzig.space/posts/meetup-35-wrapup/)
+* 2023-07-20, [ollama](https://ollama.ai) is released (with two models), [HN](https://news.ycombinator.com/item?id=36802582)
+* 2023-11-21, 43 models (each with a couple of tags/versions)
+* 2025-10-05, 100+ models, finetunes, language and multimodal models
+
+
+## What makes local LLM more practical?
+
+* quantization techniques, cf. [quantization](https://huggingface.co/docs/transformers/v4.56.2/quantization/overview)
+
+> A research field, Quantization in deep learning, aim to reduce the high cost
+> of computations and memory by representing the weights and activation in deep
+> learning models with low precision data types. -- [A Comprehensive Study on Quantization Techniques for Large Language Models](https://arxiv.org/pdf/2411.02530v1)
+
+![](static/model-size-increase-2017-2022.png)
+
+From [SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models](https://arxiv.org/pdf/2211.10438)
+
+* efficient formats (GGUF)
 
 
 
 ================================================
-FILE: LICENSE
+FILE: 30-Architecture.md
 ================================================
-MIT License
+[Empty file]
 
-Copyright (c) 2025 Martin Czygan
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+================================================
+FILE: 32-Server.md
+================================================
+# Server
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+* implements API
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
+
+
+================================================
+FILE: 34-Runner.md
+================================================
+# Runner
+
+Ollama serve subcommand starts an http server that coordinates requests and
+spawns a subprocess per model to serve the actual requests.
+
+This is the serve process and one model loaded from the blob store.
+
+```
+$ pstree -apT 143757
+ollama,143757 serve
+  └─ollama,2720443 runner --ollama-engine --model /usr/share/ollama/.ollama/models/blobs/sha256-3d0b790534fe4b79525fc3692950408dca41171676ed7e21db57af5c65ef6ab6 --port 36431
+```
+
+We can run multiple models side by side, until we run out of RAM.
+
+```
+$ pstree -apT 143757
+ollama,143757 serve
+  ├─ollama,2720443 runner --ollama-engine --model /usr/share/ollama/.ollama/models/blobs/sha256-3d0b790534fe4b79525fc3692950408dca41171676ed7e21db57af5c65ef6ab6 --port 36431
+  ├─ollama,3088461 runner --model /usr/share/ollama/.ollama/models/blobs/sha256-74701a8c35f6c8d9a4b91f3f3497643001d63e0c7a84e085bed452548fa88d45 --port 38555
+  └─ollama,3089161 runner --ollama-engine --model /usr/share/ollama/.ollama/models/blobs/sha256-aeda25e63ebd698fab8638ffb778e68bed908b960d39d0becc650fa981609d25 --port 43731
+```
+
+The runner process is a slim server:
+
+```
+$ /usr/bin/ollama runner --help
+Runner usage
+  -model string
+        Path to model binary file
+  -port int
+        Port to expose the server on (default 8080)
+  -verbose
+        verbose output (default: disabled)
+```
+
+Example invocation:
+
+```
+$ /usr/bin/ollama runner --ollama-engine --model /usr/share/ollama/.ollama/models/blobs/sha256-3d0b790534fe4b79525fc3692950408dca41171676ed7e21db57af5c65ef6ab6 --port 36432
+```
+
+## Background
+
+Ollama started with a wrapper around llama and since 02/2025 (cf.
+[#7913](https://github.com/ollama/ollama/pull/7913)) comes with an additional
+runner type "ollama", that interfaces with ggml directly.
+
+Currently two runner types:
+
+* classic (cgo, llama.cpp)
+* ollama (cgo, ggml)
+
+
+
+
+
+
+================================================
+FILE: 36-Tokenization.md
+================================================
+[Empty file]
+
+
+================================================
+FILE: 40-Model-Lifecycle.md
+================================================
+[Empty file]
+
+
+================================================
+FILE: 42-Model-Types.md
+================================================
+# Model Types
+
+## Text generation
+
+* most models
+
+## Embedding models
+
+* smaller models, with a single vector output; usually faster and can run on
+  slower hardware as well
+
+## Image understanding
+
+* llava
+* qwenvl
+
+## Reasoning
+
+* additional expansion of the user query intro a search tree
+
+
+
+================================================
+FILE: 44-Params.md
+================================================
+[Empty file]
+
+
+================================================
+FILE: 45-Templates.md
+================================================
+[Empty file]
+
+
+================================================
+FILE: 46-GGUF.md
+================================================
+# GGUF
+
+## Overview
+
+See also: [GGUF](https://github.com/ggml-org/ggml/blob/master/docs/gguf.md)
+
+> GGUF is a file format for storing **models for inference with GGML** and
+> executors based on GGML. GGUF is a binary format that is designed for fast
+> loading and saving of models, and for ease of reading. Models are
+> traditionally developed using PyTorch or another framework, and then
+> converted to GGUF for use in GGML.
+
+Some format evolution:
+
+> GGML, GGMF, GGJT, and now GGUF — and it is now at **version three** of the format.
+
+Full description: [gguf.md](https://github.com/ggml-org/ggml/blob/master/docs/gguf.md)
+
+## Highlights
+
+* encodes both tensor data and metadata
+
+
+
+================================================
+FILE: 48-Modelfile.md
+================================================
+[Empty file]
+
+
+================================================
+FILE: 50-API.md
+================================================
+[Empty file]
+
+
+================================================
+FILE: 60-Request-Trace.md
+================================================
+# Tracing a request
+
+Outline of the request flow for a completion request to the ollama api (coming
+from some client).
+
+## Request handling
+
+* completion request arrives
+
+## Runner instance
+
+## Tokenization
+
+## Batching
+
+
+
+## Code Snippets
+
+### Mostly llamarunner
+
+```go
+type CompletionRequest struct {
+    Prompt  string
+    Format  json.RawMessage
+    Images  []ImageData
+    Options *api.Options
+
+    Grammar string // set before sending the request to the subprocess
+}
+```
+
+A sequence is an abstraction over one request.
+
+```go
+type Sequence struct {
+    // batch index
+    iBatch int
+
+    // number of tokens predicted so far
+    numPredicted int
+
+    // prompt inputs left to evaluate
+    inputs []input
+
+    // inputs that have been added to a batch but not yet submitted to Decode
+    pendingInputs []input
+
+    // tokens that have been generated but not returned yet (e.g. for stop sequences)
+    pendingResponses []string
+
+    // input cache being used by this sequence
+    cache *InputCacheSlot
+
+    // channel to send responses over
+    responses chan string
+
+    // channel to stop decoding (such as if the remote connection is closed)
+    quit chan bool
+
+    // number of tokens to predict
+    numPredict int
+
+    samplingCtx *llama.SamplingContext
+
+    // channel to send back the embedding if embedding only
+    embedding chan []float32
+
+    // stop sequences
+    stop []string
+
+    // number of inputs to keep at the beginning when shifting context window
+    numKeep int
+
+    // true if an embedding are to be returned instead of text generation
+    embeddingOnly bool
+
+    doneReason llm.DoneReason
+
+    // Metrics
+    startProcessingTime time.Time
+    startGenerationTime time.Time
+    numDecoded          int
+    numPromptInputs     int
+}
+```
+
+The input can be a token or an image:
+
+```
+// input is an element of the prompt to process, either
+// a token or an image embedding (generated from a vision projector)
+type input struct {
+    token int
+
+    // embed is an image embedding
+    embed []float32
+}
+```
+
+The  server, on loading a model, allocates a maximum number of requests to
+handle in parallel.
+
+```go
+        // runner/llamarunner/runner.go:807
+        s.seqs = make([]*Sequence, s.parallel)
+```
+
+In llamarunner, the server keeps a number of slots for the sequences. The server will wait, until the a slow becomes available. Once it is available
+
+```go
+    // Ensure there is a place to put the sequence, released when removed from s.seqs
+    if err := s.seqsSem.Acquire(r.Context(), 1); err != nil {
+        if errors.Is(err, context.Canceled) {
+            slog.Info("aborting completion request due to client closing the connection")
+        } else {
+            http.Error(w, fmt.Sprintf("Failed to acquire semaphore: %v", err), http.StatusInternalServerError)
+        }
+        return
+    }
+
+    s.mu.Lock()
+    found := false
+    for i, sq := range s.seqs {
+        if sq == nil {
+            seq.cache, seq.inputs, err = s.cache.LoadCacheSlot(seq.inputs, true)
+            if err != nil {
+                s.mu.Unlock()
+                s.seqsSem.Release(1)
+                http.Error(w, fmt.Sprintf("Failed to load cache: %v", err), http.StatusInternalServerError)
+                return
+            }
+
+            s.seqs[i] = seq
+            s.cond.Signal()
+            found = true
+            break
+        }
+    }
+    s.mu.Unlock()
+```
+
+The server runs in a loop:
+
+```
+    for {
+        select {
+        case <-ctx.Done():
+            return
+        default:
+            err := s.processBatch(tokenBatch, embedBatch)
+            if err != nil {
+                panic(err)
+            }
+
+            tokenBatch.Clear()
+            embedBatch.Clear()
+        }
+    }
+```
+
+The server has a processBatch function; called from server run, which is started in a background thread.
+
+```
+    for range s.seqs {
+        seqIdx = (seqIdx + 1) % len(s.seqs)
+        seq := s.seqs[seqIdx]
+
+        if seq == nil {
+            continue
+        }
+```
+
+In this processBatch function, we call `llama_decode` through the wrapper (cf.
+[llama_context::decode](https://github.com/ggml-org/llama.cpp/blob/e6d65fb02d553bd79cad94e517cdca18b687788d/src/llama-context.cpp#L958-L1260),
+which itself calls
+[[llama_context::process_ubatch](https://github.com/ggml-org/llama.cpp/blob/e6d65fb02d553bd79cad94e517cdca18b687788d/src/llama-context.cpp#L732-L794))
+
+There, we build the graph, set the inputs and run `graph_compute`, cf. [llama-context.cpp#L755-L784](https://github.com/ggml-org/llama.cpp/blob/e6d65fb02d553bd79cad94e517cdca18b687788d/src/llama-context.cpp#L775-L784)
+
+```cpp
+    // set the input data for the input tensors
+    {
+        //const auto t_start_us = ggml_time_us();
+
+        res->set_inputs(&ubatch);
+
+        //LLAMA_LOG_INFO("graph set inputs time: %.3f ms\n", (ggml_time_us() - t_start_us)/1000.0);
+    }
+
+    const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);
+```
+
+
+### New backend architecture
+
+* new abstraction layer for backends (cf. `ml/backend.go`):
+
+```go
+type Backend interface {
+    // Close frees all memory associated with this backend
+    Close()
+
+    Load(ctx context.Context, progress func(float32)) error
+
+    // BackendMemory returns the memory allocations that were made for this model
+    BackendMemory() BackendMemory
+
+    Config() fs.Config
+    Get(name string) Tensor
+    NewContext() Context
+    NewContextSize(size int) Context
+}
+```
+
+
+
+================================================
+FILE: 80-SimSearch.md
+================================================
+# Similarity Search
+
+We are going to use an embedding model to cluster text.
+
+
+
+================================================
+FILE: 90-VisualGrep.md
+================================================
+[Empty file]
+
+
+================================================
+FILE: 99-Outro.md
+================================================
+[Empty file]
 
 
 ================================================
@@ -137,23 +693,25 @@ FILE: Slides.md
 ================================================
 # Overview
 
-* [Intro](10-Intro.md)
-* [Background](20-Background.md)
+* [Intro](10-Intro.md) [5]
+* [Background](20-Background.md) [10]
 * [Ollama architecture](30-Architecture.md)
-    * [Server](32-Server.md)
-    * [Runner](34-Runner.md)
-    * [Tokenization](36-Tokenization.md)
+    * [Server](32-Server.md) [5]
+    * [Runner](34-Runner.md) [5]
+    * [Tokenization](36-Tokenization.md) [5]
 * [Model lifecycle](40-Model-Lifecycle.md)
-    * [Model Types](42-Model-Types.md)
-    * [Model Parameters](44-Params.md)
-    * [Templates](45-Templates.md)
-    * [Model Format](46-GGUF.md)
-    * [Modelfile customizations](48-Modelfile.md)
-* [API](50-API.md)
-* [Tracing a request](60-Request-Trace.md)
-* [Ex: Similarity search](80-SimSearch.md)
-* [Ex: Visual grep](90-VisualGrep.md)
-* [Outro](99-Outro.md)
+    * [Model Types](42-Model-Types.md) [5]
+    * [Model Parameters](44-Params.md) [5]
+    * [Templates](45-Templates.md) [5]
+    * [GGUF](46-GGUF.md) [5]
+    * [Modelfile customizations](48-Modelfile.md) [5]
+* [API](50-API.md) [15]
+* [Tracing a request](60-Request-Trace.md) [5]
+* [Ex: Similarity search](80-SimSearch.md) [25]
+* [Ex: Visual grep](90-VisualGrep.md) [25]
+* [Outro](99-Outro.md) [5]
+
+
 
 
 
@@ -1267,317 +1825,89 @@ FILE: attic/60-Wrapup.md
 
 
 ================================================
-FILE: cmd/readgguf/main.go
+FILE: extra/ModelFormats.md
 ================================================
-[Binary file]
+# Model Formats
 
+* pytorch, pth
+* tensorflow, protobuf
 
-================================================
-FILE: scripts/1b.go
-================================================
-package main
+Typically full precision models.
 
-import (
-	"bufio"
-	"io"
-	"os"
-)
+* ONNX (Open Neural Network Exchange) is a common shared format
+* GGUF, focus on loading, quantization
 
-func main() {
-	bw := bufio.NewWriter(os.Stdout)
-	defer bw.Flush()
-	for _ = range 1_000_000_000 {
-		_, _ = io.WriteString(bw, "word\n")
-	}
-}
 
 
 
 ================================================
-FILE: scripts/Makefile
+FILE: extra/Quantization.md
 ================================================
-SHELL = /bin/bash
+# Quantization Notes
 
-1b: 1b.go
-	go build -o $@ $<
+* quanto; pytorch model
+* model compression
 
-.PHONY: clean
-clean:
-	rm -f 1b
+Options:
+
+* model pruning (removing layers that have little effect on performance)
+* knowledge distillation (student model; teacher model)
+
+You can quantize weights, or activations.
+
+Common example: FP32 to INT8; using 25% of the storage; aim: reduce
+quantization error
+
+## Example
+
+We take float values and map them to integers. Sampling is a form of
+quantization. Smaller models, faster inference.
+
+* DeepSeek-R1 is about 720GB in 671B parameters
+
+## Cycle
+
+* training usually in float32, float16 (bfloat16), or even float8
+* inference: only forward path; int8, int4, int1 (1 bit)
+
+> PTQ, post training quantization.
+
+Quantization aware training. Training tweaks to make a model more resilient to
+a loss in precision.
+
+
 
 
 
 ================================================
-FILE: x/quantization/main.go
+FILE: x/seq/README.md
 ================================================
-package main
+# Sequence
 
-import (
-	"fmt"
-	"math"
-)
+May need to install deps first:
 
-// QuantizationParams holds the parameters needed for quantization/dequantization
-type QuantizationParams struct {
-	Scale     float32 // Scale factor for mapping float range to int range
-	ZeroPoint int8    // Zero point offset
-	MinVal    float32 // Original minimum value
-	MaxVal    float32 // Original maximum value
-}
+> Linux
 
-// Matrix represents a simple 2D matrix
-type Matrix struct {
-	Data [][]float32
-	Rows int
-	Cols int
-}
+```shell
+# Install nlohmann-json
+sudo apt-get update
+sudo apt-get install nlohmann-json3-dev
 
-// QuantizedMatrix represents a quantized version using int8
-type QuantizedMatrix struct {
-	Data   [][]int8
-	Rows   int
-	Cols   int
-	Params QuantizationParams
-}
+# Install miniaudio (might need to install manually)
+# Download miniaudio.h from https://github.com/mackron/miniaudio
+# Or install via package manager if available
+sudo apt-get install libminiaudio-dev
+```
 
-// NewMatrix creates a new matrix with the given dimensions
-func NewMatrix(rows, cols int) *Matrix {
-	data := make([][]float32, rows)
-	for i := range data {
-		data[i] = make([]float32, cols)
-	}
-	return &Matrix{Data: data, Rows: rows, Cols: cols}
-}
+> MacOS
 
-// calculateQuantizationParams determines the scale and zero point for quantization
-func calculateQuantizationParams(minVal, maxVal float32) QuantizationParams {
-	// For int8: range is -128 to 127 (256 possible values)
-	const qMin, qMax int8 = -128, 127
-	const qRange = float32(256) // 256 possible values in int8
+```shell
+# Using Homebrew
+brew install nlohmann-json
+brew install miniaudio
 
-	// Calculate scale: how much each quantized unit represents in float space
-	scale := (maxVal - minVal) / qRange
-
-	// Calculate zero point: where 0.0 maps to in quantized space
-	zeroPoint := int8(math.Round(float64(float32(qMin) - minVal/scale)))
-
-	// Clamp zero point to valid range
-	if zeroPoint < qMin {
-		zeroPoint = qMin
-	}
-	if zeroPoint > qMax {
-		zeroPoint = qMax
-	}
-
-	return QuantizationParams{
-		Scale:     scale,
-		ZeroPoint: zeroPoint,
-		MinVal:    minVal,
-		MaxVal:    maxVal,
-	}
-}
-
-// findMinMax finds the minimum and maximum values in the matrix
-func (m *Matrix) findMinMax() (float32, float32) {
-	if m.Rows == 0 || m.Cols == 0 {
-		return 0, 0
-	}
-
-	minVal := m.Data[0][0]
-	maxVal := m.Data[0][0]
-
-	for i := 0; i < m.Rows; i++ {
-		for j := 0; j < m.Cols; j++ {
-			if m.Data[i][j] < minVal {
-				minVal = m.Data[i][j]
-			}
-			if m.Data[i][j] > maxVal {
-				maxVal = m.Data[i][j]
-			}
-		}
-	}
-
-	return minVal, maxVal
-}
-
-// Quantize converts the float32 matrix to int8 using calculated parameters
-func (m *Matrix) Quantize() *QuantizedMatrix {
-	minVal, maxVal := m.findMinMax()
-	params := calculateQuantizationParams(minVal, maxVal)
-
-	// Create quantized matrix
-	qData := make([][]int8, m.Rows)
-	for i := range qData {
-		qData[i] = make([]int8, m.Cols)
-	}
-
-	// Quantization formula: q = round((x - zero_point_float) / scale) + zero_point_int
-	// Simplified: q = round(x / scale) + zero_point
-	for i := 0; i < m.Rows; i++ {
-		for j := 0; j < m.Cols; j++ {
-			// Map float value to quantized range
-			quantized := math.Round(float64(m.Data[i][j]/params.Scale)) + float64(params.ZeroPoint)
-
-			// Clamp to int8 range
-			if quantized < -128 {
-				quantized = -128
-			}
-			if quantized > 127 {
-				quantized = 127
-			}
-
-			qData[i][j] = int8(quantized)
-		}
-	}
-
-	return &QuantizedMatrix{
-		Data:   qData,
-		Rows:   m.Rows,
-		Cols:   m.Cols,
-		Params: params,
-	}
-}
-
-// Dequantize converts the quantized matrix back to float32
-func (qm *QuantizedMatrix) Dequantize() *Matrix {
-	data := make([][]float32, qm.Rows)
-	for i := range data {
-		data[i] = make([]float32, qm.Cols)
-	}
-
-	// Dequantization formula: x = scale * (q - zero_point)
-	for i := 0; i < qm.Rows; i++ {
-		for j := 0; j < qm.Cols; j++ {
-			dequantized := qm.Params.Scale * float32(qm.Data[i][j]-qm.Params.ZeroPoint)
-			data[i][j] = dequantized
-		}
-	}
-
-	return &Matrix{Data: data, Rows: qm.Rows, Cols: qm.Cols}
-}
-
-// Print displays the matrix values
-func (m *Matrix) Print(name string) {
-	fmt.Printf("\n%s (%dx%d):\n", name, m.Rows, m.Cols)
-	for i := 0; i < m.Rows; i++ {
-		for j := 0; j < m.Cols; j++ {
-			fmt.Printf("%8.4f ", m.Data[i][j])
-		}
-		fmt.Println()
-	}
-}
-
-// Print displays the quantized matrix values
-func (qm *QuantizedMatrix) Print(name string) {
-	fmt.Printf("\n%s (%dx%d) [int8]:\n", name, qm.Rows, qm.Cols)
-	for i := 0; i < qm.Rows; i++ {
-		for j := 0; j < qm.Cols; j++ {
-			fmt.Printf("%4d ", qm.Data[i][j])
-		}
-		fmt.Println()
-	}
-	fmt.Printf("Scale: %.6f, ZeroPoint: %d, Range: [%.4f, %.4f]\n",
-		qm.Params.Scale, qm.Params.ZeroPoint, qm.Params.MinVal, qm.Params.MaxVal)
-}
-
-// calculateMemoryUsage returns memory usage in bytes for comparison
-func (m *Matrix) calculateMemoryUsage() int {
-	return m.Rows * m.Cols * 4 // 4 bytes per float32
-}
-
-func (qm *QuantizedMatrix) calculateMemoryUsage() int {
-	return qm.Rows*qm.Cols*1 + 4 + 1 + 4 + 4 // 1 byte per int8 + params
-}
-
-func main() {
-	fmt.Println("=== LLM Quantization Demonstration ===")
-	fmt.Println("This demonstrates the core concept of quantization used in efficient LLM inference")
-
-	// Create a sample weight matrix (like a small part of an LLM layer)
-	rows, cols := 4, 5
-	original := NewMatrix(rows, cols)
-
-	// Fill with some typical weight values that might appear in an LLM
-	weights := [][]float32{
-		{0.1234, -0.5678, 0.9012, -0.3456, 0.7890},
-		{-0.2345, 0.6789, -0.1012, 0.4567, -0.8901},
-		{0.3456, -0.7890, 0.2123, -0.5678, 0.9012},
-		{-0.4567, 0.8901, -0.3234, 0.6789, -0.1012},
-	}
-
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
-			original.Data[i][j] = weights[i][j]
-		}
-	}
-
-	// Show original matrix
-	original.Print("Original FP32 Matrix")
-
-	// Quantize to int8
-	quantized := original.Quantize()
-	quantized.Print("Quantized INT8 Matrix")
-
-	// Dequantize back to float32
-	dequantized := quantized.Dequantize()
-	dequantized.Print("Dequantized FP32 Matrix")
-
-	// Calculate and show memory savings
-	originalMemory := original.calculateMemoryUsage()
-	quantizedMemory := quantized.calculateMemoryUsage()
-	savings := float64(originalMemory-quantizedMemory) / float64(originalMemory) * 100
-
-	fmt.Printf("\n=== Memory Usage Comparison ===\n")
-	fmt.Printf("Original FP32: %d bytes\n", originalMemory)
-	fmt.Printf("Quantized INT8: %d bytes (including params)\n", quantizedMemory)
-	fmt.Printf("Memory savings: %.1f%%\n", savings)
-
-	// Calculate quantization error
-	fmt.Printf("\n=== Quantization Error Analysis ===\n")
-	var totalError float64
-	var maxError float64
-
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
-			error := math.Abs(float64(original.Data[i][j] - dequantized.Data[i][j]))
-			totalError += error
-			if error > maxError {
-				maxError = error
-			}
-		}
-	}
-
-	avgError := totalError / float64(rows*cols)
-	fmt.Printf("Average quantization error: %.6f\n", avgError)
-	fmt.Printf("Maximum quantization error: %.6f\n", maxError)
-
-	fmt.Println("\n=== How This Applies to Real LLM Frameworks ===")
-	fmt.Println(`
-In production LLM quantization frameworks:
-
-1. **Layer-wise Quantization**: Each layer (attention, MLP) may have different
-   quantization parameters optimized for its value distribution.
-
-2. **Weight vs Activation Quantization**:
-   - Weights: Quantized once during model conversion (static)
-   - Activations: Quantized dynamically during inference
-
-3. **Mixed Precision**: Critical layers might stay in FP16/FP32 while others
-   use INT8/INT4 to balance accuracy and speed.
-
-4. **Computation Graph Adaptation**:
-   - Some ops work directly on quantized values (element-wise add)
-   - Matrix multiplication often requires dequantization
-   - Special kernels can perform quantized matrix operations
-   - Batch norm and layer norm may need special handling
-
-5. **Framework Integration**:
-   - PyTorch: torch.quantization with QConfig
-   - TensorRT: Automatic quantization-aware training
-   - ONNX Runtime: Post-training quantization
-
-The key insight: Quantization trades precision for memory/speed, requiring
-careful calibration to maintain model quality while achieving efficiency gains.`)
-}
+# If you don't have Homebrew, install it first:
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
 
