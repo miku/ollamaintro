@@ -51,7 +51,7 @@ type SimilarityResult struct {
 }
 
 const (
-	OLLAMA_URL = "http://localhost:11434"
+	OLLAMA_URL = "http://k9:11434"
 	MODEL_NAME = "nomic-embed-text" // or "all-minilm" - adjust based on your Ollama setup
 	DATA_FILE  = "movie_embeddings.gob"
 )
@@ -113,36 +113,36 @@ func main() {
 
 func (db *MovieDatabase) createSampleMovies() {
 	movies := []Movie{
-		{1, "The Matrix", "Sci-Fi", 1999, "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers."},
-		{2, "Inception", "Sci-Fi", 2010, "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O."},
-		{3, "The Terminator", "Sci-Fi", 1984, "A human soldier is sent from 2029 to 1984 to stop an almost indestructible cyborg killing machine, sent from the same year, which has been programmed to execute a young woman whose unborn son is the key to humanity's future salvation."},
-		{4, "Blade Runner", "Sci-Fi", 1982, "A blade runner must pursue and terminate four replicants who stole a ship in space, and have returned to the earth seeking their creator."},
-		{5, "The Shawshank Redemption", "Drama", 1994, "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."},
-		{6, "Forrest Gump", "Drama", 1994, "The presidencies of Kennedy and Johnson, the events of Vietnam, Watergate and other historical events unfold through the perspective of an Alabama man with an IQ of 75."},
-		{7, "The Godfather", "Crime", 1972, "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son."},
-		{8, "Goodfellas", "Crime", 1990, "The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito."},
-		{9, "Pulp Fiction", "Crime", 1994, "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption."},
-		{10, "The Dark Knight", "Action", 2008, "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice."},
-		{11, "Die Hard", "Action", 1988, "An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles."},
-		{12, "Mad Max: Fury Road", "Action", 2015, "In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland with the aid of a group of female prisoners, a psychotic worshiper, and a drifter named Max."},
-		{13, "The Princess Bride", "Fantasy", 1987, "A bedridden boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love."},
-		{14, "Lord of the Rings: Fellowship", "Fantasy", 2001, "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron."},
-		{15, "Harry Potter: Sorcerer's Stone", "Fantasy", 2001, "An orphaned boy enrolls in a school of wizardry, where he learns the truth about himself, his family and the terrible evil that haunts the magical world."},
-		{16, "Titanic", "Romance", 1997, "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic."},
-		{17, "Casablanca", "Romance", 1942, "A cynical nightclub owner protects an old flame and her husband from Nazis in Morocco."},
-		{18, "The Notebook", "Romance", 2004, "A poor yet passionate young man falls in love with a rich young woman, giving her a sense of freedom, but they are soon separated because of their social differences."},
-		{19, "Alien", "Horror", 1979, "After a space merchant vessel receives an unknown transmission as a distress call, one of the crew is attacked by a mysterious life form and they soon realize that its life cycle has merely begun."},
-		{20, "The Exorcist", "Horror", 1973, "When a teenage girl is possessed by a mysterious entity, her mother seeks the help of two priests to save her daughter."},
-		{21, "Get Out", "Horror", 2017, "A young African-American visits his white girlfriend's parents for the weekend, where his simmering uneasiness about their reception of him eventually reaches a boiling point."},
-		{22, "Toy Story", "Animation", 1995, "A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room."},
-		{23, "Finding Nemo", "Animation", 2003, "After his son is captured in the Great Barrier Reef and taken to Sydney, a timid clownfish sets out on a journey to bring him home."},
-		{24, "The Lion King", "Animation", 1994, "A Lion prince is cast out of his pride by his cruel uncle, who claims he killed his father so that he can become the new king."},
-		{25, "Interstellar", "Sci-Fi", 2014, "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."},
-		{26, "Gravity", "Sci-Fi", 2013, "Two astronauts work together to survive after an accident leaves them stranded in space."},
-		{27, "2001: A Space Odyssey", "Sci-Fi", 1968, "After discovering a mysterious artifact buried beneath the Lunar surface, mankind sets off on a quest to find its origins with help from intelligent supercomputer H.A.L. 9000."},
-		{28, "E.T.", "Sci-Fi", 1982, "A troubled child summons the courage to help a friendly alien escape Earth and return to his home world."},
-		{29, "Casino Royale", "Action", 2006, "After earning 00 status and a licence to kill, Secret Agent James Bond sets out on his first mission as 007. Bond must defeat a private banker funding terrorists in a high-stakes game of poker."},
-		{30, "Mission: Impossible", "Action", 1996, "An American agent, under false suspicion of disloyalty, must discover and expose the real spy without the help of his organization."},
+		{ID: 1, Title: "The Matrix", Genre: "Sci-Fi", Year: 1999, Plot: "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers."},
+		{ID: 2, Title: "Inception", Genre: "Sci-Fi", Year: 2010, Plot: "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O."},
+		{ID: 3, Title: "The Terminator", Genre: "Sci-Fi", Year: 1984, Plot: "A human soldier is sent from 2029 to 1984 to stop an almost indestructible cyborg killing machine, sent from the same year, which has been programmed to execute a young woman whose unborn son is the key to humanity's future salvation."},
+		{ID: 4, Title: "Blade Runner", Genre: "Sci-Fi", Year: 1982, Plot: "A blade runner must pursue and terminate four replicants who stole a ship in space, and have returned to the earth seeking their creator."},
+		{ID: 5, Title: "The Shawshank Redemption", Genre: "Drama", Year: 1994, Plot: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."},
+		{ID: 6, Title: "Forrest Gump", Genre: "Drama", Year: 1994, Plot: "The presidencies of Kennedy and Johnson, the events of Vietnam, Watergate and other historical events unfold through the perspective of an Alabama man with an IQ of 75."},
+		{ID: 7, Title: "The Godfather", Genre: "Crime", Year: 1972, Plot: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son."},
+		{ID: 8, Title: "Goodfellas", Genre: "Crime", Year: 1990, Plot: "The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito."},
+		{ID: 9, Title: "Pulp Fiction", Genre: "Crime", Year: 1994, Plot: "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption."},
+		{ID: 10, Title: "The Dark Knight", Genre: "Action", Year: 2008, Plot: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice."},
+		{ID: 11, Title: "Die Hard", Genre: "Action", Year: 1988, Plot: "An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles."},
+		{ID: 12, Title: "Mad Max: Fury Road", Genre: "Action", Year: 2015, Plot: "In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland with the aid of a group of female prisoners, a psychotic worshiper, and a drifter named Max."},
+		{ID: 13, Title: "The Princess Bride", Genre: "Fantasy", Year: 1987, Plot: "A bedridden boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love."},
+		{ID: 14, Title: "Lord of the Rings: Fellowship", Genre: "Fantasy", Year: 2001, Plot: "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron."},
+		{ID: 15, Title: "Harry Potter: Sorcerer's Stone", Genre: "Fantasy", Year: 2001, Plot: "An orphaned boy enrolls in a school of wizardry, where he learns the truth about himself, his family and the terrible evil that haunts the magical world."},
+		{ID: 16, Title: "Titanic", Genre: "Romance", Year: 1997, Plot: "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic."},
+		{ID: 17, Title: "Casablanca", Genre: "Romance", Year: 1942, Plot: "A cynical nightclub owner protects an old flame and her husband from Nazis in Morocco."},
+		{ID: 18, Title: "The Notebook", Genre: "Romance", Year: 2004, Plot: "A poor yet passionate young man falls in love with a rich young woman, giving her a sense of freedom, but they are soon separated because of their social differences."},
+		{ID: 19, Title: "Alien", Genre: "Horror", Year: 1979, Plot: "After a space merchant vessel receives an unknown transmission as a distress call, one of the crew is attacked by a mysterious life form and they soon realize that its life cycle has merely begun."},
+		{ID: 20, Title: "The Exorcist", Genre: "Horror", Year: 1973, Plot: "When a teenage girl is possessed by a mysterious entity, her mother seeks the help of two priests to save her daughter."},
+		{ID: 21, Title: "Get Out", Genre: "Horror", Year: 2017, Plot: "A young African-American visits his white girlfriend's parents for the weekend, where his simmering uneasiness about their reception of him eventually reaches a boiling point."},
+		{ID: 22, Title: "Toy Story", Genre: "Animation", Year: 1995, Plot: "A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room."},
+		{ID: 23, Title: "Finding Nemo", Genre: "Animation", Year: 2003, Plot: "After his son is captured in the Great Barrier Reef and taken to Sydney, a timid clownfish sets out on a journey to bring him home."},
+		{ID: 24, Title: "The Lion King", Genre: "Animation", Year: 1994, Plot: "A Lion prince is cast out of his pride by his cruel uncle, who claims he killed his father so that he can become the new king."},
+		{ID: 25, Title: "Interstellar", Genre: "Sci-Fi", Year: 2014, Plot: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."},
+		{ID: 26, Title: "Gravity", Genre: "Sci-Fi", Year: 2013, Plot: "Two astronauts work together to survive after an accident leaves them stranded in space."},
+		{ID: 27, Title: "2001: A Space Odyssey", Genre: "Sci-Fi", Year: 1968, Plot: "After discovering a mysterious artifact buried beneath the Lunar surface, mankind sets off on a quest to find its origins with help from intelligent supercomputer H.A.L. 9000."},
+		{ID: 28, Title: "E.T.", Genre: "Sci-Fi", Year: 1982, Plot: "A troubled child summons the courage to help a friendly alien escape Earth and return to his home world."},
+		{ID: 29, Title: "Casino Royale", Genre: "Action", Year: 2006, Plot: "After earning 00 status and a licence to kill, Secret Agent James Bond sets out on his first mission as 007. Bond must defeat a private banker funding terrorists in a high-stakes game of poker."},
+		{ID: 30, Title: "Mission: Impossible", Genre: "Action", Year: 1996, Plot: "An American agent, under false suspicion of disloyalty, must discover and expose the real spy without the help of his organization."},
 	}
 
 	db.Movies = movies
