@@ -17,6 +17,8 @@ from some client).
 
 ## Code Snippets
 
+### Mostly llamarunner
+
 ```go
 type CompletionRequest struct {
     Prompt  string
@@ -190,22 +192,23 @@ There, we build the graph, set the inputs and run `graph_compute`, cf. [llama-co
 ```
 
 
-Tokenization:
+### New backend architecture
 
-> Tokens are the basic units of input and output in a language model, typically
-representing words, subwords, characters and punctuation.
+* new abstraction layer for backends (cf. `ml/backend.go`):
 
-> A tokenizer is an essential part of a language model that breaks up the input
-sequence into a bunch of discrete tokens.
+```go
+type Backend interface {
+    // Close frees all memory associated with this backend
+    Close()
 
-```
-int32_t llama_tokenize(
-    const struct llama_vocab * vocab,
-                  const char * text,
-                     int32_t   text_len,
-                 llama_token * tokens,
-                     int32_t   n_tokens_max,
-                        bool   add_special,
-                        bool   parse_special) {
-    return vocab->tokenize(text, text_len, tokens, n_tokens_max, add_special, parse_special);
+    Load(ctx context.Context, progress func(float32)) error
+
+    // BackendMemory returns the memory allocations that were made for this model
+    BackendMemory() BackendMemory
+
+    Config() fs.Config
+    Get(name string) Tensor
+    NewContext() Context
+    NewContextSize(size int) Context
+}
 ```
