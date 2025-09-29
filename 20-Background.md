@@ -51,6 +51,11 @@ Disambiguation" (2001)
 > orders of magnitude greater than the largest training corpus previously used
 > for this problem.
 
+Reflection of *Bitter Lesson* and *Scaling Laws* papers form 2019 and 2020,
+tl;dr: add more data (compute, parameters).
+
+----
+
 You can generate 1B words in a few seconds today:
 
 ```
@@ -87,6 +92,8 @@ $ perf stat -r 1 -B ./1b > words.txt && du -h words.txt
 
 4.7G    words.txt
 ```
+
+----
 
 ## Some events and milestones
 
@@ -140,7 +147,6 @@ And numerous more...
 * 2023-07-20, [ollama](https://ollama.ai) is released (with two models), [HN](https://news.ycombinator.com/item?id=36802582)
 * 2023-11-21, 43 models (each with a couple of tags/versions)
 * 2025-10-05, 100+ models, finetunes, language and multimodal models
-
 
 ## What makes local LLM more practical?
 
