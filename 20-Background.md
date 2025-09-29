@@ -138,9 +138,14 @@ On the tooling/data side:
 * 2023-03-10 llama.cpp (initial release)
 * 2023-07-20 ollama (initial release, support for two models)
 
+On the open models side:
+
+* 2023-02-27, [LLaMA: Open and Efficient Foundation Language Models](https://arxiv.org/abs/2302.13971)
+* [more...](https://github.com/eugeneyan/open-llms)
+
 And numerous more...
 
-> Personal timeline:
+> Personal timeline (w/ ollama):
 
 * 2023-02-14, I ask a question on how long before we can run things locally at the [Leipzig Python User Group](https://lpug.github.io/) -- personally, I expected 2-5 years timeline
 * 2023-04-18, we discuss C/GO and ggml (ai-on-the-edge) at [Leipzig Gophers #35](https://golangleipzig.space/posts/meetup-35-wrapup/)

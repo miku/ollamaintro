@@ -1,6 +1,6 @@
 # Model Types
 
-Ollama categories as of 09/2025:
+Ollama model categories as of 09/2025:
 
 * cloud (hosted)
 * embedding
@@ -46,7 +46,24 @@ reranking, retrieval, STS and summarization", [leaderboard](https://huggingface.
 
 ## Vision
 
-*
+* combine visual and text data, cf. [CLIP](), [openai/clip-vit-large-patch14](https://huggingface.co/openai/clip-vit-large-patch14)
+
+> Learning directly from raw text about images is a promising alternative which
+> leverages a much broader source of supervision.  We demonstrate that the
+> simple pre-training task of predicting which caption goes with which im- age
+> is an efficient and scalable way to learn SOTA image representations from
+> scratch on a dataset of 400 million (image, text) pairs collected from the
+> internet. After pre-training, natural language is used to reference learned
+> visual concepts (or describe new ones) enabling zero-shot transfer of the
+> model to downstream tasks.
+
+----
+
+Example: llava
+
+> We develop a large multimodal model (LMM), by connecting the open-set visual
+> encoder of CLIP with the language decoder Vicuna, and fine-tuning
+> end-to-end on our generated instructional vision-language data
 
 ## Embedding models
 
