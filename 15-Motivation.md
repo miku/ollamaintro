@@ -16,11 +16,11 @@ Some motivation for running models locally.
 > are some intriguing ideas. -- [Speech and Language Processing, Jurafsky,
 > Martin, 08/2025](https://web.stanford.edu/~jurafsky/slp3/ed3book_aug25.pdf)
 
-* after hardware costs, lower cost of use
+* after hardware costs, lower cost to run
 
 > on <2k EUR HW, ex. qwen25; 28M tokens/day (prompt eval), 4.3M tokens/day
-> (eval); depending on the provider you can pay up to EUR 70/day for this kind
-> of throughput (this is a vague calculation, of course)
+> (eval; 30+ novels per day); depending on the provider you can pay up to EUR
+> 50/day for this kind of throughput (this is a vague calculation, of course)
 
 * customizations
 * security research (open models will be used)
