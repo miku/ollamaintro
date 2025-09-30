@@ -66,3 +66,11 @@ You can pass a prompt directly as an argument.
 README](https://github.com/ollama/ollama/?tab=readme-ov-file#model-library)
 * between 815MB ("gemma3:1b") and 404GB ("deepseek-r1:671b") in size
 * HF support ollama: [https://huggingface.co/docs/hub/en/ollama](https://huggingface.co/docs/hub/en/ollama)
+
+
+### Registry
+
+* model name will get resolved to the registry manifest
+
+[![](static/screenshot-2025-10-01-000836-ollama-direct-downloader.png)](https://ollama-direct-downloader.vercel.app/)
+
