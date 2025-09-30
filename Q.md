@@ -6,6 +6,7 @@
 ## Intro and setup
 
 * [Intro](10-Intro.md)
+* [Motivation](15-Motivation.md)
 
 ## LLM background and milestones
 

@@ -9,7 +9,7 @@
 ## Workshop goals
 
 * [ ] Better understanding how Ollama works under the hood
-* [ ] Learn about Model lifecycle and customization
+* [ ] Learn about model lifecycle and customization
 * [ ] Build practical applications with embeddings in Go
 * [ ] Create a visual search tool for handwritten notes
 
@@ -43,6 +43,10 @@ and a higher end GPU equipped systems:
 * [Intel i9-13900T](https://www.intel.com/content/www/us/en/products/sku/230498/intel-core-i913900t-processor-36m-cache-up-to-5-30-ghz/compatible.html), 35W TDP, plus [NVIDIA RTX 4000 SFF](https://www.nvidia.com/en-us/products/workstations/rtx-4000-sff/) (70W)
 
 TODO: [AMD Ryzen AI Max+ 395](https://www.amd.com/en/products/processors/laptop/ryzen/ai-300-series/amd-ryzen-ai-max-plus-395.html)
+
+## ollama community integrations
+
+* [community integrations](https://github.com/ollama/ollama?tab=readme-ov-file#community-integrations)
 
 ## ollama installation files (linux)
 
