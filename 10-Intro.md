@@ -35,6 +35,12 @@ All material available on
 [github.com/miku/ollamaintro](https://github.com/miku/ollamaintro). Please
 clone, as if contains also code examples and project scaffolding.
 
+The workshop was developed on various Linux systems and tested on low end CPU
+and a higher end GPU equipped systems:
+
+* [Intel N150 CPU](https://www.intel.de/content/www/de/de/products/sku/241636/intel-processor-n150-6m-cache-up-to-3-60-ghz/specifications.html), 6W TDP
+* [Intel i5-1345U](https://www.intel.com/content/www/us/en/products/sku/232127/intel-core-i51345u-processor-12m-cache-up-to-4-70-ghz/specifications.html), 15W TDP
+* [Intel i9-13900T](https://www.intel.com/content/www/us/en/products/sku/230498/intel-core-i913900t-processor-36m-cache-up-to-5-30-ghz/compatible.html), 35W TDP, plus [NVIDIA RTX 4000 SFF](https://www.nvidia.com/en-us/products/workstations/rtx-4000-sff/) (70W)
 
 ## ollama installation files (linux)
 

@@ -42,7 +42,6 @@ Flags:
   -v, --version   Show version information
 
 Use "ollama [command] --help" for more information about a command.
-
 ```
 
 ## Running a model
@@ -50,3 +49,7 @@ Use "ollama [command] --help" for more information about a command.
 ```
 $ ollama run llama3:latest
 ```
+
+* drops you into a chat interface
+
+
