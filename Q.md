@@ -51,8 +51,18 @@ Use "ollama [command] --help" for more information about a command.
 $ ollama run llama3:latest
 ```
 
+* download model from default registry to local cache
 * drops you into a chat interface
 
 [![](static/screenshot-2025-09-30-174533-intel-n150-alder-lake-llama3.png)](https://github.com/miku/ollamaintro/blob/main/static/ollama-chat-n150-llama3.gif?raw=true)
 
 You can pass a prompt directly as an argument.
+
+
+## What models?
+
+* ollama library lists models in the default registry:
+  [library](https://ollama.com/library); also [list in
+README](https://github.com/ollama/ollama/?tab=readme-ov-file#model-library)
+* between 815MB ("gemma3:1b") and 404GB ("deepseek-r1:671b") in size
+* HF support ollama: [https://huggingface.co/docs/hub/en/ollama](https://huggingface.co/docs/hub/en/ollama)
