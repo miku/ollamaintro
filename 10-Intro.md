@@ -42,6 +42,8 @@ and a higher end GPU equipped systems:
 * [Intel i5-1345U](https://www.intel.com/content/www/us/en/products/sku/232127/intel-core-i51345u-processor-12m-cache-up-to-4-70-ghz/specifications.html), 15W TDP
 * [Intel i9-13900T](https://www.intel.com/content/www/us/en/products/sku/230498/intel-core-i913900t-processor-36m-cache-up-to-5-30-ghz/compatible.html), 35W TDP, plus [NVIDIA RTX 4000 SFF](https://www.nvidia.com/en-us/products/workstations/rtx-4000-sff/) (70W)
 
+TODO: [AMD Ryzen AI Max+ 395](https://www.amd.com/en/products/processors/laptop/ryzen/ai-300-series/amd-ryzen-ai-max-plus-395.html)
+
 ## ollama installation files (linux)
 
 ```

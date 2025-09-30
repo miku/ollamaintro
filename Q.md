@@ -52,4 +52,4 @@ $ ollama run llama3:latest
 
 * drops you into a chat interface
 
-
+![](static/screenshot-2025-09-30-174533-intel-n150-alder-lake-llama3.png)
