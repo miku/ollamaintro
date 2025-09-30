@@ -114,4 +114,28 @@ $ curl -sL "https://registry.ollama.ai/v2/library/gemma3/manifests/latest" | jq 
 }
 ```
 
+### Huggingface
+
+* todo: download link
+* todo: custom model manifest on own server
+
+## Quantization
+
+* model size depends on number of parameters, typically millions, billions, up to trillions
+* one technique to reduce model size (other: lora, pruning, knowledge
+  destillation, parameter sharing; cf. [model shrinking
+techniques](https://web.dev/articles/llm-sizes#model-shrinking))
+
+> Quantization: Reducing the precision of weights from floating-point numbers
+> (such as, 32-bit) to lower-bit representations (such as, 8-bit).
+
+## Using the API
+
+* todo: curl
+* todo: parameters
+
+## What are the different model types?
+
+* todo: custom modes; maybe gifcities, example for clip
+
 

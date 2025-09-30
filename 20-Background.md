@@ -150,7 +150,7 @@ And numerous more...
 * 2023-02-14, I ask a question on how long before we can run things locally at the [Leipzig Python User Group](https://lpug.github.io/) -- personally, I expected 2-5 years timeline
 * 2023-04-18, we discuss C/GO and ggml (ai-on-the-edge) at [Leipzig Gophers #35](https://golangleipzig.space/posts/meetup-35-wrapup/)
 * 2023-07-20, [ollama](https://ollama.ai) is released (with two models), [HN](https://news.ycombinator.com/item?id=36802582)
-* 2023-11-21, 43 models (each with a couple of tags/versions)
+* 2023-11-21, 43 models (each with a couple of tags/versions; cf. [hoarding](https://www.reddit.com/r/LocalLLaMA/comments/16rfwt2/share_your_model_collection/))
 * 2025-10-05, 100+ models, finetunes, language and multimodal models
 
 ## What makes local LLM more practical?
