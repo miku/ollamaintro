@@ -167,11 +167,39 @@ Deep dive: [A Visual Guide to Quantization](https://www.maartengrootendorst.com/
 
 * todo: curl
 * todo: parameters
+* todo: using the API from Go, SDK
 
 ## What are the different model types?
 
-* todo: custom modes; maybe gifcities, example for clip
+* [Model Types](42-Model-Types.md)
 
 
+## Working with a text model
+
+### Single completion
+
+### Chat completion
+
+
+## Working with an image model
+
+### Passing an image
+
+
+## Working with an embedding model
+
+## Request Trace
+
+* [Request Trace](60-Request-Trace.md)
+
+## Tokenization
+
+* character tokens
+* word tokens
+* subword tokens
+
+### BPE in Go
+
+* todo: BPE in go
 
 
