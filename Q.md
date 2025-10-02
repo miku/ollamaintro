@@ -433,7 +433,7 @@ $ find /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library -ty
 
 ## Model Customization Options
 
-* Modelfile
+* Modelfile, https://ollama.readthedocs.io/en/modelfile/
 * change parameters: top-k, top-n, system prompt, adapter
 
 
