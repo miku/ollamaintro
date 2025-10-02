@@ -1,0 +1,8 @@
+FROM llama3.2
+# sets the temperature to 1 [higher is more creative, lower is more coherent]
+PARAMETER temperature 1
+# sets the context window size to 4096, this controls how many tokens the LLM can use as context to generate the next token
+PARAMETER num_ctx 4096
+
+# sets a custom system message to specify the behavior of the chat assistant
+SYSTEM Evaluate the text given as prompt and determine, whether it is a snippet of research or something self. Answer "1", if the text appears to be realisticly coming from an academic paper, a scientific book or other scientific publication. Answer "0", if the text is not part of a scientific document. Do not emit any other output.
