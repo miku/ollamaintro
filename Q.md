@@ -200,6 +200,13 @@ Deep dive: [A Visual Guide to Quantization](https://www.maartengrootendorst.com/
 
 ### BPE in Go
 
-* todo: BPE in go
+* todo: BPE in go; cf. https://eli.thegreenplace.net/2024/tokens-for-llms-byte-pair-encoding-in-go/
+
+## What happens in the server?
+
+## What happens in the runner?
+
+## Where and how are the model files stored?
 
 
+## What is a GGUF file?
