@@ -424,6 +424,7 @@ $ find /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library -ty
 
 ## What is a GGUF file?
 
+* [GGUF](46-GGUF.md)
 
 ## Customizations
 
@@ -438,3 +439,19 @@ $ find /usr/share/ollama/.ollama/models/manifests/registry.ollama.ai/library -ty
 
 
 ## Model Evaluation
+
+How do I know, how a model performs a certain task?
+
+> Evaluations
+
+* there is a large number of benchmarks and benchmark datasets
+* the open llm leaderboard hosted on HF has been discontinued in 2025
+* benchmarks will test a benchmark dataset (in isolation), limited insight into general usefulness
+
+> [Misrepresented Technological Solutions in Imagined Futures: The Origins and
+> Dangers of AI Hype in the Research
+> Community](https://arxiv.org/pdf/2408.15244) (2024)
+
+* LLM are multitask learners and hence an LLM is not really made for a single purpose
+
+

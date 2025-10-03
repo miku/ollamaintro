@@ -41,6 +41,8 @@ Grok-100B-v1.0-Q4_0-00003-of-00009.gguf
 
 ## readgguf
 
+* [x/ggufopen/](x/ggufopen)
+
 Example cli application: readgguf. You can point it to a file or URL to get
 some information about gguf file.
 

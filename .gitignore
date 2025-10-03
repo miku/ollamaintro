@@ -36,3 +36,5 @@ scripts/words.txt
 static/gguf/SmolDocling-256M-preview-q8_0.gguf
 TODO.md
 digest.txt
+
+x/ggufopen/llama3.2.gguf
