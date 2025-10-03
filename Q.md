@@ -72,6 +72,35 @@ README](https://github.com/ollama/ollama/?tab=readme-ov-file#model-library)
 
 * HF support ollama: [https://huggingface.co/docs/hub/en/ollama](https://huggingface.co/docs/hub/en/ollama)
 
+As of 2025, ollama support a number of model capabilities:
+
+```go
+package model
+
+type Capability string
+
+const (
+    CapabilityCompletion = Capability("completion")
+    CapabilityTools      = Capability("tools")
+    CapabilityInsert     = Capability("insert")
+    CapabilityVision     = Capability("vision")
+    CapabilityEmbedding  = Capability("embedding")
+    CapabilityThinking   = Capability("thinking")
+)
+
+func (c Capability) String() string {
+    return string(c)
+}
+```
+
+* completion
+* tools
+* insert
+* vision
+* embedding
+* thinking
+
+
 
 ### Registry
 
@@ -248,6 +277,59 @@ Server exposes chat and management API.
 * server can have keep multiple models running at the same time
 * it will swap out models, as requests require
 
+A few more tasks:
+
+* checking model capabilities ("images.go"), matched against model properties, read from gguf
+
+```go
+// CheckCapabilities checks if the model has the specified capabilities returning an error describing
+// any missing or unknown capabilities
+func (m *Model) CheckCapabilities(want ...model.Capability) error {
+    available := m.Capabilities()
+    var errs []error
+
+    // Map capabilities to their corresponding error
+    capToErr := map[model.Capability]error{
+        model.CapabilityCompletion: errCapabilityCompletion,
+        model.CapabilityTools:      errCapabilityTools,
+        model.CapabilityInsert:     errCapabilityInsert,
+        model.CapabilityVision:     errCapabilityVision,
+        model.CapabilityEmbedding:  errCapabilityEmbedding,
+        model.CapabilityThinking:   errCapabilityThinking,
+    }
+
+    for _, cap := range want {
+        err, ok := capToErr[cap]
+        if !ok {
+            slog.Error("unknown capability", "capability", cap)
+            return fmt.Errorf("unknown capability: %s", cap)
+        }
+
+        if !slices.Contains(available, cap) {
+            errs = append(errs, err)
+        }
+    }
+    ...
+```
+
+### Scheduler
+
+The scheduler schedules models, load and unloads them, keeps track of available memory.
+
+```go
+// Returns immediately, spawns go routines for the scheduler which will shutdown when ctx is done
+func (s *Scheduler) Run(ctx context.Context) {
+        slog.Debug("starting llm scheduler")
+        go func() {
+                s.processPending(ctx)
+        }()
+
+        go func() {
+                s.processCompleted(ctx)
+        }()
+}
+```
+
 
 ## What happens in the runner?
 
@@ -265,6 +347,64 @@ Ollama has two runner options.
 
 The llamarunner is the classic runner, ollamarunner is a new, Go abstraction
 with a default backend using GGML.
+
+### A pure Go abstraction
+
+* `ml/backend.go` contains a pure Go abstraction of the execution runtime
+* a `Tensor` interface
+* a `Context` interface, containing
+
+Currently one backend based on ggml. The `New` constructor is less than 400
+SLOC, after which the `ml.Backend` abstraction can be used.
+
+```go
+func NewBackend(modelPath string, params BackendParams) (Backend, error) {
+    if backend, ok := backends["ggml"]; ok {
+        return backend(modelPath, params)
+    }
+
+    return nil, fmt.Errorf("unsupported backend")
+}
+```
+
+Setting up the ggml based backend:
+
+* read gguf file, parse metadata
+* collect available backends (cpu, gpu, accelarators)
+* calculate required memory across devices
+* assign each layer to a backend
+
+```
+    layers := make([]deviceBufferType, blocks)
+    for i := range layers {
+        layers[i] = assignLayer(i)
+    }
+```
+
+* allocate tensors (with name mappings)
+
+```go
+createTensor := func(t tensor, bts []C.ggml_backend_buffer_type_t, layer int) *C.struct_ggml_tensor
+```
+
+* assemble backend struct and return
+
+### Layers to GPU
+
+Layers are assigned to multiple GPUs, if available.
+
+```
+// GPULayers is a set of layers to be allocated on a single GPU
+type GPULayers struct {
+    // ID is the identifier of the GPU, as reported in DeviceMemory
+    ID string
+
+    // Layers is a set of layer indicies to load
+    Layers []int
+}
+```
+
+
 
 ## Where and how are the model files stored?
 
