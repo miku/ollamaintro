@@ -16,6 +16,7 @@ import (
 type FunctionInfo struct {
 	ID       int    `json:"id"`
 	Text     string `json:"text"`
+	Len      int    `json:"len"`
 	Filename string `json:"filename,omitempty"`
 	Line     int    `json:"line,omitempty"`
 }
@@ -66,6 +67,11 @@ func extractFunctions(dir string) ([]FunctionInfo, error) {
 			return nil
 		}
 
+		// Skip test files
+		if strings.HasSuffix(path, "_test.go") {
+			return nil
+		}
+
 		// Parse the Go file
 		fset := token.NewFileSet()
 		node, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
@@ -100,6 +106,7 @@ func extractFunctions(dir string) ([]FunctionInfo, error) {
 				funcInfo := FunctionInfo{
 					ID:       idCounter,
 					Text:     funcText,
+					Len:      len(funcText),
 					Filename: path,
 					Line:     pos.Line,
 				}
