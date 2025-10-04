@@ -165,7 +165,7 @@ func main() {
 		}
 		req := &api.EmbedRequest{
 			Model: *modelName,
-			Input: *doTextSimilarity,
+			Input: *prependGemma + *doTextSimilarity,
 		}
 		resp, err := client.Embed(context.TODO(), req)
 		if err != nil {
