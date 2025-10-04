@@ -19,7 +19,6 @@ import (
 )
 
 var (
-	ollamaHost         = flag.String("s", os.Getenv("OLLAMA_HOST"), "ollama host")
 	modelName          = flag.String("m", "nomic-embed-text", "model name")
 	filename           = flag.String("f", "data/pg1661.json", "data file to read text snippets from")
 	store              = flag.String("w", "embed.json", "file to save embeddings to")
@@ -27,6 +26,7 @@ var (
 	doCreateEmbeddings = flag.Bool("e", false, "create embeddings for data")
 	doRandomTriplet    = flag.Bool("3", false, "random three")
 	doTextSimilarity   = flag.String("T", "", "for a given string, find three more similar passages")
+	prependGemma       = flag.String("G", "", `string to prepend on embed request, e.g. "task: sentence similarity | query: " cf. https://huggingface.co/blog/embeddinggemma#usage`)
 
 	// (1) take three snippets and compare / which one is closer to the other?
 	// (2) enter some text and find similar snippets
@@ -46,7 +46,7 @@ type Set struct {
 
 func main() {
 	flag.Parse()
-
+	log.Printf("using service at: %v (%v)", os.Getenv("OLLAMA_HOST"), *modelName)
 	switch {
 	case *doCreateEmbeddings:
 		f, err := os.Open(*filename)
@@ -92,9 +92,12 @@ func main() {
 			if *limit > 0 && i == *limit {
 				break
 			}
+			if *modelName != "embeddinggemma" {
+				*prependGemma = "" // only prepend for embeddinggemma, cf. https://huggingface.co/blog/embeddinggemma#usage
+			}
 			req := &api.EmbedRequest{
 				Model: *modelName,
-				Input: set.Chunks[i].Text,
+				Input: *prependGemma + set.Chunks[i].Text,
 			}
 			resp, err := client.Embed(context.TODO(), req)
 			if err != nil {

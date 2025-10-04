@@ -59,4 +59,4 @@
 
 ## Wrapup
 
-* prompt hacking
+* prompt hacking project ideas
