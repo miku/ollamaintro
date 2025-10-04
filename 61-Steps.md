@@ -369,11 +369,14 @@ There can only one model be loaded at a time, but multiple requests to the same 
     activeLoading llm.LlamaServer
 ```
 
-* if there is no "llama" server, we request a new one
+* in `load` - if there is no "llama" server, we request a new one
 
 ```go
 llama, err = s.newServerFn(gpus, req.model.ModelPath, f, req.model.AdapterPaths, req.model.ProjectorPaths, req.opts, numParallel)
 ```
+
+This is the callback that starts the runner.
+
 
 ## NewLlamaServer (server)
 
@@ -531,4 +534,19 @@ type Model interface {
 }
 ```
 
+## Note: LoadOperation stages
 
+```
+// The order of these constants are significant because we iterate over the operations. They
+// should be in order of increasingly loading the model.
+const (
+    LoadOperationFit    LoadOperation = iota // Return memory requirements but do not allocate
+    LoadOperationAlloc                       // Allocate memory but do not load the weights
+    LoadOperationCommit                      // Load weights - further changes cannot be made after this
+    LoadOperationClose                       // Close model and free memory
+)
+```
+
+## TODO
+
+* runner pkg
