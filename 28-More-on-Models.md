@@ -45,4 +45,15 @@ Not supported: audio, video
 ## Modalities
 
 * completion is the basic text interaction
-* tools
+* tools; [x/toolcall](x/toolcall)
+* insert (adds a suffix, e.g. code completion)
+* vision: joint text and image models, captioning, OCR, ...
+* embedding: maps data into a dense vector space
+* thinking ...
+
+Test-time compute scaling; more tokens, better responses; related to prompt
+engineering, CoT - mostly empiric. Thinking token, delimiter for "<think>" ...;
+can be turned on off. Cf. deepseek-r1 ("[Incentivizing Reasoning Capability in
+LLMs via Reinforcement Learning](https://arxiv.org/abs/2501.12948)" - cited by
+[4110](https://scholar.google.com/scholar?cluster=2469397274690356930)); "trained on question/answer pairs"
+
