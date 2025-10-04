@@ -22,3 +22,13 @@
 ## More on models
 
 * [more on models](28-More-on-Models.md)
+
+## Quantization
+
+* [Quantization](29-Quantization.md)
+
+## API and SDK
+
+* [API and SDK](50-API.md)
+
+
