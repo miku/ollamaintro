@@ -12,6 +12,7 @@ import (
 	"math"
 	"math/rand/v2"
 	"os"
+	"sort"
 
 	"github.com/ollama/ollama/api"
 	"golang.org/x/exp/constraints"
@@ -25,6 +26,7 @@ var (
 	limit              = flag.Int("l", 10, "limit requests")
 	doCreateEmbeddings = flag.Bool("e", false, "create embeddings for data")
 	doRandomTriplet    = flag.Bool("3", false, "random three")
+	doTextSimilarity   = flag.String("T", "", "for a given string, find three more similar passages")
 
 	// (1) take three snippets and compare / which one is closer to the other?
 	// (2) enter some text and find similar snippets
@@ -145,6 +147,47 @@ func main() {
 		for i := range selected {
 			fmt.Printf("%d: %v\n\n", selected[i].ID, selected[i].Text)
 		}
+	case *doTextSimilarity != "":
+		if _, err := os.Stat(*store); os.IsNotExist(err) {
+			log.Fatal("create embedding first")
+		}
+		set, err := loadChunksFromFile(*store)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// create embedding for given text
+		client, err := api.ClientFromEnvironment()
+		if err != nil {
+			log.Fatal(err)
+		}
+		req := &api.EmbedRequest{
+			Model: *modelName,
+			Input: *doTextSimilarity,
+		}
+		resp, err := client.Embed(context.TODO(), req)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if len(resp.Embeddings) < 1 {
+			log.Println("warn: empty reply")
+			return
+		}
+
+		// Use the generic ScoredItems type
+		var sims ScoredItems[Chunk, float32]
+		targetEmbedding := resp.Embeddings[0]
+
+		for _, chunk := range set.Chunks {
+			score := float32(CosineSimilarity(targetEmbedding, chunk.Embedding))
+			sims.Add(chunk, score)
+		}
+
+		// Get top 3 most similar chunks
+		top3 := sims.Top(3)
+		for _, item := range top3 {
+			fmt.Printf("score: %.4f - %v %v\n\n", item.Score, item.Item.ID, item.Item.Text)
+		}
+
 	}
 }
 
@@ -235,4 +278,73 @@ func Combinations[T any](items []T, r int) [][]T {
 	}
 
 	return result
+}
+
+// ScoredItem pairs an item of any type with a numeric score.
+type ScoredItem[T any, S constraints.Float] struct {
+	Item  T
+	Score S
+}
+
+// ScoredItems is a collection of scored items with convenience methods.
+type ScoredItems[T any, S constraints.Float] []ScoredItem[T, S]
+
+// Top returns the n items with the highest scores.
+// Items are returned in descending order by score.
+func (s ScoredItems[T, S]) Top(n int) ScoredItems[T, S] {
+	if n <= 0 {
+		return ScoredItems[T, S]{}
+	}
+	if n > len(s) {
+		n = len(s)
+	}
+
+	// Create a copy to avoid modifying the original
+	sorted := make(ScoredItems[T, S], len(s))
+	copy(sorted, s)
+
+	// Sort by score descending
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i].Score > sorted[j].Score
+	})
+
+	return sorted[:n]
+}
+
+// Bottom returns the n items with the lowest scores.
+// Items are returned in ascending order by score.
+func (s ScoredItems[T, S]) Bottom(n int) ScoredItems[T, S] {
+	if n <= 0 {
+		return ScoredItems[T, S]{}
+	}
+	if n > len(s) {
+		n = len(s)
+	}
+
+	sorted := make(ScoredItems[T, S], len(s))
+	copy(sorted, s)
+
+	// Sort by score ascending
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i].Score < sorted[j].Score
+	})
+
+	return sorted[:n]
+}
+
+// Sorted returns a new slice sorted by score in descending order.
+func (s ScoredItems[T, S]) Sorted() ScoredItems[T, S] {
+	sorted := make(ScoredItems[T, S], len(s))
+	copy(sorted, s)
+
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i].Score > sorted[j].Score
+	})
+
+	return sorted
+}
+
+// Add appends a new scored item to the collection.
+func (s *ScoredItems[T, S]) Add(item T, score S) {
+	*s = append(*s, ScoredItem[T, S]{Item: item, Score: score})
 }
