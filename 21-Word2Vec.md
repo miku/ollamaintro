@@ -8,13 +8,13 @@ guess a word from a context.
 
 * dense representations
 
-![](cat-mouse-table-100.png)
+![](static/cat-mouse-table-100.png)
 
 <!-- ![](cat_sim.png) -->
 
-![](artimethic_0.png)
+![](static/artimethic_0.png)
 
-![](artimethic_1.png)
+![](static/artimethic_1.png)
 
 
 
