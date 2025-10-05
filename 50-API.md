@@ -1,8 +1,17 @@
 # API and SDK
 
-* Go sdk
-* TODO: text completion
-* TODO: embedding model
-* TODO: image understanding
+
+## Go SDK
+
+```go
+```
+
+## Text Completion
+
+## Embedding model
+
+## Image understanding
+
+
 
 
