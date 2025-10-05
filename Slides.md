@@ -37,7 +37,7 @@
 
 ## Request Trace
 
-* [Request Trace](60-Request-Trace.md)
+<!-- * [Request Trace](60-Request-Trace.md) -->
 * [Steps](61-Steps.md)
 
 ## Tokenization
@@ -48,13 +48,13 @@
 
 * [Customization](47-Customization.md)
 
-## Project: cluster data
+## Project: similarity search
 
-* cluster
+* [x/simsearch](x/simsearch/)
 
 ## Project: Grep in images
 
-* imgrep
+* [x/imgrep](x/imgrep)
 
 ## Wrapup
 
