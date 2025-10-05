@@ -35,7 +35,6 @@ The user will provide text to critique directly. Answer concisely, less is more.
 
 TEMPLATE """ [INST] {{ .System }} {{ .Prompt }} [/INST]"""
 PARAMETER stop "[INST]"
-PARAMETER stop "[/INST]"
 PARAMETER repeat_penalty 1.5
 PARAMETER top_k 50
 PATAMETER top_p 0.75
