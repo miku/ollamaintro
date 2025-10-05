@@ -1,6 +1,5 @@
 # Code Examples
 
-* bpe
 * curl
 * custom
 * discovergpu
