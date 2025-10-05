@@ -31,10 +31,86 @@ func main() {
 
 ## Text Completion
 
+```go
+	client, err := api.ClientFromEnvironment()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req := &api.GenerateRequest{
+		Model:  "gemma3",
+		Prompt: "Why is the sky blue?",
+	}
+
+	ctx := context.Background()
+
+	err = client.Generate(ctx, req, func(resp api.GenerateResponse) error {
+		fmt.Print(resp.Response)
+		return nil
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println()
+```
+
 ## Embedding model
 
-## Image understanding
+```go
 
+func main() {
+	client, err := api.ClientFromEnvironment()
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	req := &api.EmbedRequest{
+		Model: "embeddinggemma",
+		Input: "The sky is blue because of Rayleigh scattering",
+	}
 
+	resp, err := client.Embed(context.TODO(), req)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	fmt.Printf("dimensions: %d\n", len(resp.Embeddings[0]))
+	fmt.Printf("%v ...\n", resp.Embeddings[0][:10])
+}
+
+```
+
+## Image processing
+
+```go
+func main() {
+	client, err := api.ClientFromEnvironment()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	b, err := os.ReadFile("image.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req := &api.GenerateRequest{
+		Model:  "moondream",
+		Prompt: "Describe this image in detail",
+		Images: []api.ImageData{b},
+	}
+
+	err = client.Generate(context.TODO(), req, func(resp api.GenerateResponse) error {
+		fmt.Print(resp.Response)
+		return nil
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println()
+}
+``` 
