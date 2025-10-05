@@ -3,6 +3,23 @@
 > Intro to Ollama Workshop at [GoLab](https://golab.io) 2025, 2025-10-05,
 > [Martin Czygan](https://de.linkedin.com/in/martin-czygan-58348842)
 
+## Quick start checklist
+
+* [ ] please [install ollama](https://ollama.com/download) on your laptop (ok, if it only has a cpu)
+
+After installation, please run the following commands to download a few models
+files onto your laptop (order or prefence):
+
+```
+ollama pull embeddinggemma
+ollama pull llama3.2
+ollama pull gemma3:270m
+ollama pull gemma3
+ollama pull qwen2.5vl
+```
+
+Warning: These file models may occupy over 10GB of disk space.
+
 ## Overview
 
 Ollama is a popular tool to run LLM (and multimodal and embedding models) on

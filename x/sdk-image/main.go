@@ -1,9 +1,3 @@
-# API and SDK
-
-
-## Go SDK
-
-```go
 package main
 
 import (
@@ -27,15 +21,3 @@ func main() {
 		log.Printf("%v %v %v", m.Digest, m.Name, m.Details.ParameterSize)
 	}
 }
-
-```
-
-## Text Completion
-
-## Embedding model
-
-## Image understanding
-
-
-
-
