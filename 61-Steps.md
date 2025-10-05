@@ -547,6 +547,212 @@ const (
 )
 ```
 
-## TODO
+----
 
-* runner pkg
+## Runner outline
+
+The runner server is quite slim:
+
+```go
+
+func Execute(args []string) error {
+	fs := flag.NewFlagSet("runner", flag.ExitOnError)
+	mpath := fs.String("model", "", "Path to model binary file")
+	port := fs.Int("port", 8080, "Port to expose the server on")
+	_ = fs.Bool("verbose", false, "verbose output (default: disabled)")
+
+	fs.Usage = func() {
+		fmt.Fprintf(fs.Output(), "Runner usage\n")
+		fs.PrintDefaults()
+	}
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	slog.SetDefault(logutil.NewLogger(os.Stderr, envconfig.LogLevel()))
+	slog.Info("starting ollama engine")
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	server := &Server{
+		modelPath: *mpath,
+		status:    llm.ServerStatusLaunched,
+		hardErrCh: make(chan error, 1),
+	}
+
+	server.cond = sync.NewCond(&server.mu)
+	server.ready.Add(1)
+
+	go server.run(ctx)
+
+	addr := "127.0.0.1:" + strconv.Itoa(*port)
+	listener, err := net.Listen("tcp", addr)
+	if err != nil {
+		fmt.Println("Listen error:", err)
+		return err
+	}
+	defer listener.Close()
+
+	mux := http.NewServeMux()
+	// TODO: support embeddings
+	mux.HandleFunc("POST /load", server.load)
+	mux.HandleFunc("POST /embedding", server.embeddings)
+	mux.HandleFunc("POST /completion", server.completion)
+	mux.HandleFunc("GET /health", server.health)
+
+	httpServer := http.Server{
+		Handler: mux,
+	}
+
+	log.Println("Server listening on", addr)
+	if err := httpServer.Serve(listener); err != nil {
+		log.Fatal("server error:", err)
+		return err
+	}
+
+	return nil
+}
+```
+
+And the main loop is short, too:
+
+```go
+func (s *Server) run(ctx context.Context) {
+	s.ready.Wait()
+
+	supportsAsync := pooling.Type(s.model.Backend().Config().Uint("pooling_type")) == pooling.TypeNone
+
+	var activeBatch batchState
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case err := <-s.hardErrCh:
+			panic(err)
+		default:
+			var err error
+			activeBatch, err = s.forwardBatch(activeBatch)
+			if err != nil {
+				panic(err)
+			}
+
+			if supportsAsync {
+				go s.computeBatch(activeBatch)
+			} else {
+				s.computeBatch(activeBatch)
+			}
+		}
+	}
+}
+```
+
+### completion request
+
+```go
+func (s *Server) completion(w http.ResponseWriter, r *http.Request) {
+    var req llm.CompletionRequest
+    json.NewDecoder(r.Body).Decode(&req)
+    // req.Prompt is the raw string
+    // req.Images contains multimodal data
+```
+
+### sequence creation
+
+Sequence abstraction over text and image imputs and processing.
+
+```go
+	return &Sequence{
+		ctxs:                ctxs,
+		mmStore:             mmStore,
+		inputs:              inputs,
+		numPromptInputs:     len(inputs),
+		startProcessingTime: startTime,
+		numPredict:          params.numPredict,
+		pendingResponses:    make([]string, 0),
+		responses:           make(chan string, 100),
+		quit:                make(chan bool, 1),
+		embedding:           make(chan []float32, 1),
+		sampler:             params.sampler,
+		embeddingOnly:       params.embedding,
+		stop:                params.stop,
+		numKeep:             params.numKeep,
+	}, nil
+```
+
+* inputs: queue of tokens/embeddings to process
+* pendingInputs: added to batch but not yet computed
+* cache: KV cache slot for this conversation
+* responses: channel for streaming tokens back
+
+```go
+    seq, err := s.NewSequence(req.Prompt, req.Images, NewSequenceParams{
+        numPredict: req.Options.NumPredict,
+        stop:       req.Options.Stop,
+        numKeep:    int32(req.Options.NumKeep),
+        sampler:    sampler,
+        embedding:  false,
+    })
+```
+
+### inputs
+
+* turn prompt and images to inputs
+
+```go
+// inputs processes the prompt and images into a list of inputs
+// by splitting the prompt on [img-<n>] tags, tokenizing text and
+// decoding images
+func (s *Server) inputs(prompt string, images []llm.ImageData) ([]*input.Input, []ml.Context, multimodalStore, error) {
+```
+
+### prepare batch
+
+```go
+// forwardBatch will calculate a batch.
+func (s *Server) forwardBatch(pendingBatch batchState) (nextBatch batchState, err error) {
+
+...
+```
+
+### compute batch
+
+* compute batch, break on EOS, sample token
+
+```
+
+	activeBatch.batch.Inputs.SetValueFromIntSlice(batchInputs)
+	activeBatch.ctx.ComputeWithNotify(
+		func() {
+			logutil.Trace("computeBatch: signaling computeStartedCh", "batchID", activeBatch.id)
+			activeBatch.computeStartedCh <- struct{}{}
+		},
+		activeBatch.modelOutput)
+
+	outputs := activeBatch.modelOutput.Floats()
+
+...
+
+		// sample a token
+		vocabSize := len(outputs) / activeBatch.batch.Outputs.Dim(0)
+		logutil.Trace("computeBatch: vocab details", "batchID", activeBatch.id, "seqIdx", i, "len(logits)", len(outputs), "len(activeBatch.batch.Outputs)", activeBatch.batch.Outputs.Dim(0), "vocabSize", vocabSize, "iBatches", iBatches)
+		token, err := seq.sampler.Sample(outputs[iBatches[i]*vocabSize : (iBatches[i]+1)*vocabSize])
+		if err != nil {
+			s.hardErrCh <- fmt.Errorf("failed to sample token: %w", err)
+			return
+		}
+
+...
+
+		// if it's an end of sequence token, break
+		if s.model.(model.TextProcessor).Is(token, model.SpecialEOS) {
+			// TODO (jmorganca): we should send this back
+			// as it's important for the /api/generate context
+			// seq.responses <- piece
+			logutil.Trace("computeBatch: EOS", "batchID", activeBatch.id, "seqIdx", i)
+			s.removeSequence(i, llm.DoneReasonStop)
+			continue
+		}
+```
+
+
+
