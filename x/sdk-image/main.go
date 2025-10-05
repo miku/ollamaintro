@@ -2,22 +2,38 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/ollama/ollama/api"
 )
 
 func main() {
-	// api.NewClient or api.ClientFromEnvironment
 	client, err := api.ClientFromEnvironment()
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp, err := client.List(context.TODO())
+
+	b, err := os.ReadFile("image.png")
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, m := range resp.Models {
-		log.Printf("%v %v %v", m.Digest, m.Name, m.Details.ParameterSize)
+
+	req := &api.GenerateRequest{
+		Model:  "moondream",
+		Prompt: "Describe this image in detail",
+		Images: []api.ImageData{b},
 	}
+
+	err = client.Generate(context.TODO(), req, func(resp api.GenerateResponse) error {
+		fmt.Print(resp.Response)
+		return nil
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println()
 }

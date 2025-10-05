@@ -2,22 +2,28 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/ollama/ollama/api"
 )
 
 func main() {
-	// api.NewClient or api.ClientFromEnvironment
 	client, err := api.ClientFromEnvironment()
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp, err := client.List(context.TODO())
+
+	req := &api.EmbedRequest{
+		Model: "embeddinggemma",
+		Input: "The sky is blue because of Rayleigh scattering",
+	}
+
+	resp, err := client.Embed(context.TODO(), req)
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, m := range resp.Models {
-		log.Printf("%v %v %v", m.Digest, m.Name, m.Details.ParameterSize)
-	}
+
+	fmt.Printf("dimensions: %d\n", len(resp.Embeddings[0]))
+	fmt.Printf("%v ...\n", resp.Embeddings[0][:10])
 }

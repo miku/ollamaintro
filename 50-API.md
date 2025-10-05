@@ -27,7 +27,6 @@ func main() {
 		log.Printf("%v %v %v", m.Digest, m.Name, m.Details.ParameterSize)
 	}
 }
-
 ```
 
 ## Text Completion
