@@ -16,6 +16,13 @@ Some format evolution:
 
 Full description: [gguf.md](https://github.com/ggml-org/ggml/blob/master/docs/gguf.md)
 
+![](static/313174776-c3623641-3a1d-408e-bfaf-1b7c4e16aa63.png)
+
 ## Highlights
 
-* encodes both tensor data and metadata
+* Single-file deployment: they can be easily distributed and loaded, and do not require any external files for additional information.
+* Extensible: new features can be added to GGML-based executors/new information can be added to GGUF models without breaking compatibility with existing models.
+* mmap compatibility: models can be loaded using mmap for fast loading and saving.
+* Easy to use: models can be easily loaded and saved using a small amount of code, with no need for external libraries, regardless of the language used.
+* Full information: all information needed to load a model is contained in the model file, and no additional information needs to be provided by the user.
+
