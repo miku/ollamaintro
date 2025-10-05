@@ -18,7 +18,7 @@ Training corpus: corpus.file: 1096052 words, vocab: 32922, mostly "bible" (via [
 
 ![](static/artimethic_1.png)
 
-> [](static/artimethic_0.png)
+> [unblurred](static/artimethic_0.png)
 
 
 
