@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	// api.NewClient or api.ClientFromEnvironment
 	client, err := api.ClientFromEnvironment()
 	if err != nil {
 		log.Fatal(err)
