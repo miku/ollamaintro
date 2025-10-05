@@ -8,6 +8,10 @@ guess a word from a context.
 
 * dense representations
 
+Example in python:
+
+* [x/word2vec/](x/word2vec)
+
 ![](static/cat-mouse-table-100.png)
 
 <!-- ![](cat_sim.png) -->
