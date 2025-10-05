@@ -12,9 +12,9 @@ guess a word from a context.
 
 <!-- ![](cat_sim.png) -->
 
-![](static/artimethic_0.png)
-
 ![](static/artimethic_1.png)
+
+> [](static/artimethic_0.png)
 
 
 
