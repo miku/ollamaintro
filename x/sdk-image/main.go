@@ -21,7 +21,7 @@ func main() {
 	}
 
 	req := &api.GenerateRequest{
-		Model:  "moondream",
+		Model:  "qwen2.5vl",
 		Prompt: "Describe this image in detail",
 		Images: []api.ImageData{b},
 	}
