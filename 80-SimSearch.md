@@ -1,9 +1,6 @@
 # Similarity Search
 
-We are going to use an embedding model to cluster text.
+We are going to use an embedding model find similar text snippets.
 
-Goal: We are going to find similar text snippets.
-
-
-
+* [x/simsearch](x/simsearch)
 

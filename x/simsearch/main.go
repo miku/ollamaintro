@@ -28,9 +28,9 @@ var (
 	doTextSimilarity   = flag.String("T", "", "for a given string, find three more similar passages")
 	prependGemma       = flag.String("G", "", `string to prepend on embed request, e.g. "task: sentence similarity | query: " cf. https://huggingface.co/blog/embeddinggemma#usage`)
 
-	// (1) take three snippets and compare / which one is closer to the other?
-	// (2) enter some text and find similar snippets
-	// (3) cluster snippets
+	// (1) create embeddings "-e"
+	// (2) take three snippets and compare / which one is closer to the other? "-3"
+	// (3) enter some text and find similar snippets "-T"
 )
 
 // Chunk is a small piece of text.
@@ -194,6 +194,7 @@ func main() {
 	}
 }
 
+// loadChunksFromFile reads chunks into a set.
 func loadChunksFromFile(filename string) (*Set, error) {
 	f, err := os.Open(filename)
 	if err != nil {
@@ -218,6 +219,9 @@ func loadChunksFromFile(filename string) (*Set, error) {
 	}
 	return set, nil
 }
+
+// Generic utilities
+// =================
 
 // CosineSimilarity computes the cosine similarity between two vectors.
 // Works with any numeric type but returns float64 for precision.
