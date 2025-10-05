@@ -14,9 +14,7 @@
 * sdk-completion-nostream
 * sdk-embedding
 * sdk-image
-* seq
 * simsearch
-* spe
 * toolcall
 * word2vec
 
