@@ -12,6 +12,8 @@ guess a word from a context.
 
 <!-- ![](cat_sim.png) -->
 
+Quick quiz:
+
 ![](static/artimethic_1.png)
 
 > [](static/artimethic_0.png)
