@@ -5,6 +5,7 @@
 * [ ] Who has already used Ollama?
 * [ ] Who has run an LLM locally?
 * [ ] Who has worked with model APIs before?
+* [ ] Who knows that the Go repository contains a language model implementation?
 
 ## Workshop goals
 
@@ -90,3 +91,16 @@ $ tar -tf ollama-linux-amd64.tgz
 * libcublas: [](https://developer.nvidia.com/cublas), "[...] several API
   extensions for providing drop-in industry standard BLAS APIs and GEMM APIs
 with support for fusions that are highly optimized for NVIDIA GPUs."
+
+## A language model in the Go repository
+
+* [x/markov](x/markov)
+
+> Generating random text: a Markov chain algorithm
+
+> Based on the program presented in the "Design and Implementation" chapter of
+> The Practice of Programming (Kernighan and Pike, Addison-Wesley 1999).  See
+> also Computer Recreations, Scientific American 260, 122 - 125 (1989).
+
+[![](static/computer-recreations-markov-page-1-50.png)](https://golangleipzig.space/images/computer-recreations-markov-page-1-50.png)
+

@@ -21,7 +21,7 @@
 
 ## More on models
 
-* [more on models](28-More-on-Models.md)
+* [More on models](28-More-on-Models.md)
 
 ## Model storage
 
