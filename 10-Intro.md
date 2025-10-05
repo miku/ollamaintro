@@ -17,7 +17,9 @@
 ## Local and remote machine setup
 
 * Install ollama on your laptop, you can follow the instructions here: [https://ollama.com/download](https://ollama.com/download)
-* We will have access to a cloud GPU server instance, running a RTX 4000 SFF GPU with 20GB VRAM (an efficient GPU, that consumes at most 70W)
+* We will have access to a cloud GPU server instance, running a [RTX 4000
+  SFF](https://www.nvidia.com/content/dam/en-zz/Solutions/rtx-4000-sff/proviz-rtx-4000-sff-ada-datasheet-2616456-web.pdf)
+GPU with 20GB VRAM (an efficient GPU, that consumes at most 70W)
 
 Most examples will work well on Linux and MacOS, but Windows WSL should also
 work.

@@ -41,3 +41,5 @@ Some motivation for running models locally.
   [concept](https://kisski.gwdg.de/dok/grundversorgung.pdf) for AI basis
 services for a regional scientific community; est. cost EUR 5-10M; for
 projected 1M users that would amount to about EUR 5-10 per year per user.
+
+![](/static/header_hu_21bbca9802774865.webp)
