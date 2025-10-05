@@ -14,6 +14,8 @@ guess a word from a context.
 
 Quick quiz:
 
+Training corpus: corpus.file: 1096052 words, vocab: 32922, mostly "bible" (via [gutenberg.org](https://gutenberg.org))
+
 ![](static/artimethic_1.png)
 
 > [](static/artimethic_0.png)
