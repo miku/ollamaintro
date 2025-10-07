@@ -300,6 +300,17 @@ func min(a, b int) int {
 	return b
 }
 
+// filterAlpha keeps only lowercase alphabetic characters
+func filterAlpha(s string) string {
+	var result strings.Builder
+	for _, r := range s {
+		if r >= 'a' && r <= 'z' {
+			result.WriteRune(r)
+		}
+	}
+	return result.String()
+}
+
 func main() {
 	// Command line flags
 	useStdin := flag.Bool("stdin", false, "Read sentences from stdin (one sentence per line)")
@@ -323,7 +334,15 @@ func main() {
 				continue
 			}
 			// Split line into words and convert to lowercase
-			words := strings.Fields(strings.ToLower(line))
+			fields := strings.Fields(strings.ToLower(line))
+			words := make([]string, 0, len(fields))
+			for _, field := range fields {
+				// Keep only alphabetic characters
+				word := filterAlpha(field)
+				if word != "" {
+					words = append(words, word)
+				}
+			}
 			if len(words) > 0 {
 				sentences = append(sentences, words)
 			}
