@@ -1,10 +1,14 @@
 package main
 
 import (
+	"bufio"
+	"flag"
 	"fmt"
 	"math"
 	"math/rand"
+	"os"
 	"sort"
+	"strings"
 )
 
 // Word2Vec implements Skip-gram with Negative Sampling
@@ -297,27 +301,60 @@ func min(a, b int) int {
 }
 
 func main() {
-	// Sample corpus
-	sentences := [][]string{
-		{"the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"},
-		{"the", "dog", "is", "lazy"},
-		{"the", "cat", "is", "quick"},
-		{"the", "fox", "is", "brown"},
-		{"a", "quick", "brown", "dog", "jumps"},
-		{"the", "lazy", "cat", "sleeps"},
-		{"quick", "animals", "run", "fast"},
-		{"brown", "animals", "are", "common"},
-	}
+	// Command line flags
+	useStdin := flag.Bool("stdin", false, "Read sentences from stdin (one sentence per line)")
+	embeddingDim := flag.Int("dim", 50, "Embedding dimension")
+	windowSize := flag.Int("window", 2, "Context window size")
+	minCount := flag.Int("min-count", 1, "Minimum word frequency")
+	negativeSamples := flag.Int("negative", 5, "Number of negative samples")
+	learningRate := flag.Float64("lr", 0.025, "Learning rate")
+	epochs := flag.Int("epochs", 10, "Number of training epochs")
+	flag.Parse()
 
-	// Replicate sentences for more training data
-	var allSentences [][]string
-	for i := 0; i < 100; i++ {
-		allSentences = append(allSentences, sentences...)
+	var sentences [][]string
+
+	if *useStdin {
+		// Read from stdin
+		fmt.Fprintln(os.Stderr, "Reading sentences from stdin...")
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			line := strings.TrimSpace(scanner.Text())
+			if line == "" {
+				continue
+			}
+			// Split line into words and convert to lowercase
+			words := strings.Fields(strings.ToLower(line))
+			if len(words) > 0 {
+				sentences = append(sentences, words)
+			}
+		}
+		if err := scanner.Err(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading stdin: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Fprintf(os.Stderr, "Read %d sentences\n", len(sentences))
+	} else {
+		// Use demo corpus
+		demoSentences := [][]string{
+			{"the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"},
+			{"the", "dog", "is", "lazy"},
+			{"the", "cat", "is", "quick"},
+			{"the", "fox", "is", "brown"},
+			{"a", "quick", "brown", "dog", "jumps"},
+			{"the", "lazy", "cat", "sleeps"},
+			{"quick", "animals", "run", "fast"},
+			{"brown", "animals", "are", "common"},
+		}
+
+		// Replicate sentences for more training data
+		for i := 0; i < 100; i++ {
+			sentences = append(sentences, demoSentences...)
+		}
 	}
 
 	// Train model
-	model := NewWord2Vec(50, 2, 1, 5, 0.025, 10)
-	model.Train(allSentences)
+	model := NewWord2Vec(*embeddingDim, *windowSize, *minCount, *negativeSamples, *learningRate, *epochs)
+	model.Train(sentences)
 
 	// Test similarity
 	fmt.Println("\nMost similar to 'quick':")
@@ -325,6 +362,8 @@ func main() {
 		for _, ws := range similar {
 			fmt.Printf("  %s: %.4f\n", ws.Word, ws.Similarity)
 		}
+	} else {
+		fmt.Printf("  Error: %v\n", err)
 	}
 
 	fmt.Println("\nMost similar to 'dog':")
@@ -332,5 +371,7 @@ func main() {
 		for _, ws := range similar {
 			fmt.Printf("  %s: %.4f\n", ws.Word, ws.Similarity)
 		}
+	} else {
+		fmt.Printf("  Error: %v\n", err)
 	}
 }
