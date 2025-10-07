@@ -16,6 +16,7 @@ In 2025, there are numerous other tools to run models locally:
 * [OpenLLM](https://github.com/bentoml/OpenLLM)
 * [Lemonade](https://lemonade-server.ai/)
 * [Jan.ai](https://github.com/menloresearch/jan)
+* [yzma](https://github.com/hybridgroup/yzma)
 * and more ...
 
 And even more user interfaces of various kinds.
