@@ -33,6 +33,14 @@ var (
 	// (3) enter some text and find similar snippets "-T"
 )
 
+const (
+	InfoColor    = "\033[1;34m%s\033[0m"
+	NoticeColor  = "\033[1;36m%s\033[0m"
+	WarningColor = "\033[1;33m%s\033[0m"
+	ErrorColor   = "\033[1;31m%s\033[0m"
+	DebugColor   = "\033[0;36m%s\033[0m"
+)
+
 // Chunk is a small piece of text.
 type Chunk struct {
 	ID        int64     `json:"id"`
@@ -46,7 +54,9 @@ type Set struct {
 
 func main() {
 	flag.Parse()
-	log.Printf("using service at: %v (%v)", os.Getenv("OLLAMA_HOST"), *modelName)
+	fmt.Printf("finding similar snippets to: ")
+	fmt.Printf(WarningColor, fmt.Sprintf("%s\n\n...\n\n", *doTextSimilarity))
+	// log.Printf("using service at: %v (%v)", os.Getenv("OLLAMA_HOST"), *modelName)
 	switch {
 	case *doCreateEmbeddings:
 		f, err := os.Open(*filename)
@@ -188,7 +198,14 @@ func main() {
 		// Get top 3 most similar chunks
 		top3 := sims.Top(3)
 		for _, item := range top3 {
-			fmt.Printf("score: %.4f - %v %v\n\n", item.Score, item.Item.ID, item.Item.Text)
+			// fmt.Printf("score: %.4f - %v %v\n\n", item.Score, item.Item.ID, item.Item.Text)
+			fmt.Printf("score: ")
+			fmt.Printf(InfoColor, fmt.Sprintf("%.4f", item.Score))
+			fmt.Printf(" ")
+			fmt.Printf(NoticeColor, fmt.Sprintf("%v", item.Item.ID))
+			fmt.Printf(" ")
+			fmt.Printf(WarningColor, fmt.Sprintf("%v", item.Item.Text))
+			fmt.Printf("\n\n")
 		}
 
 	}
