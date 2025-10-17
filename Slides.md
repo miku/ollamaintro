@@ -124,10 +124,12 @@ looked at three examples.
 
 ## Project: Grep in images
 
-As a final piece, we let a 6W TDP
+As a final piece, we let a 6W TDP 16GB RAM
 [machine](https://www.zimaspace.com/products/single-board2-server) running an
-[Intel N150](https://www.intel.de/content/www/de/de/products/sku/241636/intel-processor-n150-6m-cache-up-to-3-60-ghz/specifications.html)
-run a multimodal model running OCR. It took a few minutes.
+[Intel
+N150](https://www.intel.de/content/www/de/de/products/sku/241636/intel-processor-n150-6m-cache-up-to-3-60-ghz/specifications.html)
+run a multimodal model ("qwen2.5vl") running handwritten text recognition. It
+took a bit, but worked!
 
 * [x/imgrep](x/imgrep)
 
