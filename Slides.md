@@ -3,7 +3,7 @@
 > Workshop at [GoLab](https://golab.io) 2025, 2025-10-05, [Martin
 > Czygan](https://de.linkedin.com/in/martin-czygan-58348842)
 
-## Intro
+## 1 Intro
 
 > Introductory remarks and a note on an already existing language model in the Go
 repository you may not have heard about before.
@@ -12,7 +12,7 @@ repository you may not have heard about before.
 
 [![](static/computer-recreations-markov-page-1-50.png)](https://go.dev/doc/codewalk/markov/)
 
-## Motivation
+## 2 Motivation
 
 > A list of advantages and disadvantages running your own models, with an example
 of a large scale shared community infrastructure in Germany.
@@ -21,7 +21,7 @@ of a large scale shared community infrastructure in Germany.
 
 [![](static/2507.20526-model-vuln.png)](https://arxiv.org/pdf/2507.20526)
 
-## Background
+## 3 Background
 
 > From bag-of-words, to embeddings to large-language models; a recap in ten
 > minutes. Let's do some word arithmetic!
@@ -30,7 +30,7 @@ of a large scale shared community infrastructure in Germany.
 
 ![](static/artimethic_1.png)
 
-## CLI
+## 4 CLI
 
 > The ollama cli and all the subcommands in a quick tour. Also: a hidden debug
 flag that helps to demystify some of the prompt assembly process.
@@ -39,7 +39,7 @@ flag that helps to demystify some of the prompt assembly process.
 
 ![](static/ollama-cli-debug_render_only.png)
 
-## More on models
+## 5 More on models
 
 > Model types and where to find model files. Ollama uses a registry similar to
 Docker with manifests and blobs. Thinking and tool use models are results of
@@ -52,7 +52,7 @@ Models](https://dl.acm.org/doi/pdf/10.1145/3704435).
 
 ![](static/ollama-capabilities.png)
 
-## Model storage
+## 6 Model storage
 
 > Model storage on disk, inspired by Docker. One advantage is that models can be
 distributed as single files ("Modelfile"), which combine related files (model,
@@ -62,21 +62,19 @@ template, license, ...) into one package.
 
 ![](static/ollama-manifest.png)
 
-## Quantization
+## 7 Quantization
 
 * [Quantization](29-Quantization.md)
 
 ![](static/bfloat16-wikipedia.png)
 
-## API and SDK
+## 8 API and SDK
 
 * [API and SDK](50-API.md)
 
 ![](static/ollama-api-example.png)
 
-## Request Trace
-
-<!-- * [Request Trace](60-Request-Trace.md) -->
+## 9 Request Trace
 
 > Tracing a single completion request from the API to the inference core. Ollama
 has a scheduler to load and unload models on the fly. The models are running in
@@ -87,7 +85,7 @@ time for a model is 5min.
 
 ![](static/ollama-internals-compute.png)
 
-## Tokenization
+## 10 Tokenization
 
 > Characters are too short, words may be too long. Current tokenizers often operate on
 a sub-word level. A popular algorithm, [byte-pair
@@ -101,7 +99,7 @@ translation](https://aclanthology.org/P16-1162.pdf).
 
 ![](static/bpe.png)
 
-## Customization
+## 11 Customization
 
 > You can try to steer models for specific applications with system prompts. We
 looked at three examples.
@@ -110,7 +108,7 @@ looked at three examples.
 
 ![](static/ollama-eliza.png)
 
-## Project: similarity search
+## 12 Project: similarity search
 
 > We chopped up [Sherlock Holmes stories](https://www.gutenberg.org/ebooks/1661) into
 > [sentences](https://github.com/neurosnap/sentences). Then we could find
@@ -122,7 +120,7 @@ looked at three examples.
 
 ![](static/simsearch-embeddinggemma-holmes-crowd.png)
 
-## Project: Grep in images
+## 13 Project: Grep in images
 
 As a final piece, we let a 6W TDP 16GB RAM
 [machine](https://www.zimaspace.com/products/single-board2-server) running an
@@ -135,9 +133,9 @@ took a bit, but worked!
 
 ![](static/IMG_4680_s.jpg)
 
-![](static/ollama-qwen2.5vl-handwritten-note.png)
+![](static/ollama-qwen2.5vl-handwritten-note-s.png)
 
-## Wrapup
+## 14 Wrapup
 
 * prompt hacking project ideas
 
