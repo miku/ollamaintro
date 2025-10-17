@@ -120,11 +120,22 @@ looked at three examples.
 * [x/simsearch](x/simsearch/)
 
 
+![](static/simsearch-embeddinggemma-holmes-crowd.png)
 
 ## Project: Grep in images
 
+As a final piece, we let a 6W TDP
+[machine](https://www.zimaspace.com/products/single-board2-server) running an
+[Intel N150](https://www.intel.de/content/www/de/de/products/sku/241636/intel-processor-n150-6m-cache-up-to-3-60-ghz/specifications.html)
+run a multimodal model running OCR. It took a few minutes.
+
 * [x/imgrep](x/imgrep)
+
+![](static/IMG_4680_s.jpg)
+
+![](static/ollama-qwen2.5vl-handwritten-note.png)
 
 ## Wrapup
 
 * prompt hacking project ideas
+
