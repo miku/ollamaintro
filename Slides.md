@@ -70,6 +70,8 @@ template, license, ...) into one package.
 
 ## 8 API and SDK
 
+> The ollama and openai compatible APIs are relatively easy to get started with.
+
 * [API and SDK](50-API.md)
 
 ![](static/ollama-api-example.png)
