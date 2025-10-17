@@ -19,7 +19,7 @@ of a large scale shared community infrastructure in Germany.
 
 * [Motivation](15-Motivation.md)
 
-[![](2507.20526-model-vuln.png)](https://arxiv.org/pdf/2507.20526)
+[![](static/2507.20526-model-vuln.png)](https://arxiv.org/pdf/2507.20526)
 
 ## Background
 
