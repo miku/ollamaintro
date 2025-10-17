@@ -3,7 +3,7 @@
 > Intro to Ollama Workshop at [GoLab](https://golab.io) 2025, 2025-10-05,
 > [Martin Czygan](https://de.linkedin.com/in/martin-czygan-58348842)
 
-We have [Slides](Slides.md).
+We have [Slides](Slides.md) and [examples](x/), which are mostly self contained.
 
 ## Overview
 
