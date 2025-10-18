@@ -15,7 +15,7 @@ In 2025, there are numerous other tools to run models locally:
 * [llama.cpp](https://github.com/ggml-org/llama.cpp) (wrapped by ollama)
 * [llamafile](https://github.com/Mozilla-Ocho/llamafile) (single file distribution)
 * [vLLM](https://github.com/vllm-project/vllm) (used by various cloud services, #1 for prod)
-* [Docker Model Runner](https://www.docker.com/blog/introducing-docker-model-runner/) (cf. [How OCI Artifacts Will Drive Future AI Use Cases](https://www.cncf.io/blog/2025/08/27/how-oci-artifacts-will-drive-future-ai-use-cases/)))
+* [Docker Model Runner](https://www.docker.com/blog/introducing-docker-model-runner/) (cf. [How OCI Artifacts Will Drive Future AI Use Cases](https://www.cncf.io/blog/2025/08/27/how-oci-artifacts-will-drive-future-ai-use-cases/))
 * [OpenLLM](https://github.com/bentoml/OpenLLM)
 * [Lemonade](https://lemonade-server.ai/) (AMD)
 * [Jan.ai](https://github.com/menloresearch/jan)
