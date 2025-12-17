@@ -28,7 +28,7 @@ of a large scale shared community infrastructure in Germany.
 
 * [Background](20-Background.md)
 
-![](static/aritmethic_1.png)
+![](static/arithmetic_1.png)
 
 ## 4 CLI
 
