@@ -9,20 +9,34 @@ Requirements:
     pip install gguf numpy
 
 Run:
-    python 05_toy_model.py
+    python 05_toy_model.py --hidden-dim 512 --n-heads 8 --vocab-size 32000
 
-This creates 'toymodel.gguf' which can be imported into Ollama:
-    ollama create toymodel -f toymodel.gguf
-    ollama run toymodel "Hello"
+Testing with ollama runner directly:
+    # Start the runner
+    ollama runner --ollama-engine --model ./toymodel.gguf --port 8080 &
 
-Note: The output will be random since weights are random!
+    # Load the model (must specify parameters)
+    curl -X POST localhost:8080/load -d '{
+        "Operation": 2,
+        "Parallel": 1,
+        "BatchSize": 512,
+        "KvSize": 2048
+    }'
+
+    # Send a completion request
+    curl -X POST localhost:8080/completion -d '{"prompt": "Hello", "n_predict": 10}'
+
+Note: The output will be random since weights are untrained!
+The model demonstrates valid GGUF structure compatible with ollama's engine.
 """
 
 import numpy as np
+import struct
 
 # Import gguf - pip install gguf
 try:
     import gguf
+    from gguf import GGUFWriter, GGMLQuantizationType
 except ImportError:
     print("Please install gguf: pip install gguf")
     exit(1)
@@ -43,7 +57,7 @@ def create_toy_model(
     - token_embd.weight: vocabulary embeddings
     - blk.N.attn_q/k/v.weight: attention projections
     - blk.N.attn_output.weight: attention output projection
-    - blk.N.ffn_up/down.weight: feed-forward network
+    - blk.N.ffn_up/down/gate.weight: feed-forward network
     - blk.N.attn_norm/ffn_norm.weight: layer norms
     - output_norm.weight: final layer norm
     - output.weight: output projection to vocabulary
@@ -58,11 +72,13 @@ def create_toy_model(
     print()
 
     # Initialize GGUF writer with "llama" architecture
-    # This tells Ollama to use the llama model implementation
-    writer = gguf.GGUFWriter(output_path, "llama")
+    writer = GGUFWriter(output_path, "llama")
 
     # Set random seed for reproducibility
     np.random.seed(42)
+
+    head_dim = hidden_dim // n_heads
+    ffn_dim = hidden_dim * 4  # Standard 4x expansion
 
     # ====================
     # Add required metadata
@@ -70,39 +86,95 @@ def create_toy_model(
 
     # General metadata
     writer.add_name("ToyModel")
+    writer.add_type("model")  # Required: indicates this is a model
     writer.add_description("A minimal toy model for demonstration")
-    writer.add_file_type(gguf.GGMLQuantizationType.F32)  # Full precision
+    writer.add_file_type(GGMLQuantizationType.F32)
 
     # Architecture-specific metadata (llama.*)
     writer.add_context_length(context_length)
     writer.add_embedding_length(hidden_dim)
     writer.add_block_count(n_layers)
     writer.add_head_count(n_heads)
-    writer.add_head_count_kv(n_heads)  # For grouped-query attention (same as head_count for MHA)
-    writer.add_feed_forward_length(hidden_dim * 4)  # Standard 4x expansion
-    writer.add_rope_dimension_count(hidden_dim // n_heads)  # RoPE dimensions
+    writer.add_head_count_kv(n_heads)  # Same as head_count for standard MHA
+    writer.add_feed_forward_length(ffn_dim)
+    writer.add_rope_dimension_count(head_dim)
+    writer.add_rope_freq_base(10000.0)
+    writer.add_layer_norm_rms_eps(1e-5)
+    writer.add_key_length(head_dim)
+    writer.add_value_length(head_dim)
 
-    # Tokenizer metadata (minimal byte-level tokenizer)
-    writer.add_tokenizer_model("gpt2")  # Use GPT-2 style tokenizer
+    # Vocabulary size
     writer.add_vocab_size(vocab_size)
 
-    # Add token list (byte values as strings for simplicity)
-    tokens = [f"<{i:02x}>" for i in range(vocab_size)]
+    print("Core metadata added.")
+
+    # ====================
+    # Add tokenizer metadata
+    # ====================
+
+    # Use GPT-2 style BPE tokenizer
+    writer.add_tokenizer_model("gpt2")
+    writer.add_tokenizer_pre("default")  # Preprocessing type
+
+    # Create token list - byte-level tokens
+    tokens = []
+    for i in range(vocab_size):
+        if i == 0:
+            tokens.append("<pad>")
+        elif i == 1:
+            tokens.append("<s>")  # BOS
+        elif i == 2:
+            tokens.append("</s>")  # EOS
+        elif i == 3:
+            tokens.append("<unk>")
+        elif i < 128:
+            # Printable ASCII
+            if 32 <= i < 127:
+                tokens.append(chr(i))
+            else:
+                tokens.append(f"<0x{i:02X}>")
+        else:
+            tokens.append(f"<0x{i:02X}>")
+
     writer.add_token_list(tokens)
+
+    # Token types: 1=normal, 2=unknown, 3=control, 4=user_defined, 5=unused, 6=byte
+    token_types = []
+    for i in range(vocab_size):
+        if i == 0:
+            token_types.append(3)  # control (pad)
+        elif i == 1:
+            token_types.append(3)  # control (bos)
+        elif i == 2:
+            token_types.append(3)  # control (eos)
+        elif i == 3:
+            token_types.append(2)  # unknown
+        else:
+            token_types.append(1)  # normal
+
+    writer.add_token_types(token_types)
+
+    # Token scores (for SentencePiece compatibility, but needed)
+    scores = [0.0] * vocab_size
+    writer.add_token_scores(scores)
 
     # Special tokens
     writer.add_bos_token_id(1)
     writer.add_eos_token_id(2)
     writer.add_pad_token_id(0)
+    writer.add_add_bos_token(True)
+    writer.add_add_eos_token(False)
 
-    print("Metadata added.")
+    # BPE merges - minimal set (empty is OK for byte-level)
+    # For a real model, you'd have thousands of merges
+    merges = []
+    writer.add_token_merges(merges)
+
+    print("Tokenizer metadata added.")
 
     # ====================
     # Add model tensors
     # ====================
-
-    head_dim = hidden_dim // n_heads
-    ffn_dim = hidden_dim * 4
 
     # Token embeddings: [vocab_size, hidden_dim]
     add_tensor(writer, "token_embd.weight",
@@ -113,6 +185,7 @@ def create_toy_model(
         prefix = f"blk.{layer}"
 
         # Attention weights
+        # Q, K, V projections
         add_tensor(writer, f"{prefix}.attn_q.weight",
                    shape=(hidden_dim, hidden_dim))
         add_tensor(writer, f"{prefix}.attn_k.weight",
@@ -122,21 +195,23 @@ def create_toy_model(
         add_tensor(writer, f"{prefix}.attn_output.weight",
                    shape=(hidden_dim, hidden_dim))
 
-        # Feed-forward weights
+        # Feed-forward weights (SwiGLU style with gate)
+        add_tensor(writer, f"{prefix}.ffn_gate.weight",
+                   shape=(ffn_dim, hidden_dim))
         add_tensor(writer, f"{prefix}.ffn_up.weight",
                    shape=(ffn_dim, hidden_dim))
         add_tensor(writer, f"{prefix}.ffn_down.weight",
                    shape=(hidden_dim, ffn_dim))
 
-        # Layer norms (1D)
+        # RMSNorm weights (1D, no bias for RMSNorm)
         add_tensor(writer, f"{prefix}.attn_norm.weight",
-                   shape=(hidden_dim,))
+                   shape=(hidden_dim,), init_ones=True)
         add_tensor(writer, f"{prefix}.ffn_norm.weight",
-                   shape=(hidden_dim,))
+                   shape=(hidden_dim,), init_ones=True)
 
     # Output layers
     add_tensor(writer, "output_norm.weight",
-               shape=(hidden_dim,))
+               shape=(hidden_dim,), init_ones=True)
     add_tensor(writer, "output.weight",
                shape=(vocab_size, hidden_dim))
 
@@ -153,19 +228,34 @@ def create_toy_model(
 
     print(f"\nModel written to: {output_path}")
     print("\nTo use with Ollama:")
-    print(f"  ollama create toymodel -f {output_path}")
+    print()
+    print("  # Create a Modelfile that references the GGUF")
+    print(f"  echo 'FROM ./{output_path}' > Modelfile")
+    print("  ollama create toymodel -f Modelfile")
     print("  ollama run toymodel 'Hello'")
-    print("\nNote: Output will be random (untrained weights)!")
+    print()
+    print("Note: Output will be random (untrained weights)!")
+
+    # Also write the Modelfile for convenience
+    modelfile_path = output_path.replace('.gguf', '.Modelfile')
+    with open(modelfile_path, 'w') as f:
+        f.write(f"FROM ./{output_path}\n")
+        f.write("PARAMETER temperature 0.8\n")
+        f.write("PARAMETER num_ctx 512\n")
+    print(f"Modelfile written to: {modelfile_path}")
 
 
-def add_tensor(writer, name: str, shape: tuple):
-    """Add a tensor with random weights (Xavier initialization)."""
-    # Xavier/Glorot initialization for better random outputs
-    fan_in = shape[-1] if len(shape) > 1 else shape[0]
-    fan_out = shape[0] if len(shape) > 1 else shape[0]
-    std = np.sqrt(2.0 / (fan_in + fan_out))
-
-    data = np.random.normal(0, std, shape).astype(np.float32)
+def add_tensor(writer, name: str, shape: tuple, init_ones: bool = False):
+    """Add a tensor with random or ones initialization."""
+    if init_ones:
+        # For normalization layers, initialize to ones
+        data = np.ones(shape, dtype=np.float32)
+    else:
+        # Xavier/Glorot initialization for better random outputs
+        fan_in = shape[-1] if len(shape) > 1 else shape[0]
+        fan_out = shape[0] if len(shape) > 1 else shape[0]
+        std = np.sqrt(2.0 / (fan_in + fan_out))
+        data = np.random.normal(0, std, shape).astype(np.float32)
 
     print(f"  Adding: {name:40s} shape={shape}")
     writer.add_tensor(name, data)

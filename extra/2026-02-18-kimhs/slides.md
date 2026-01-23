@@ -455,18 +455,18 @@ writer.close()
 ## Toy Model: Creating the Manifest
 
 ```bash
-# Create model from GGUF file
-# Method 1: Modelfile
+# Create a Modelfile that references the GGUF
 cat > Modelfile << 'EOF'
 FROM ./toymodel.gguf
 PARAMETER temperature 0.7
-TEMPLATE "{{ .Prompt }}"
+PARAMETER num_ctx 512
 EOF
 
+# Register with Ollama
 ollama create toymodel -f Modelfile
 
-# Method 2: Direct import
-ollama create toymodel -f toymodel.gguf
+# Verify it's available
+ollama list | grep toymodel
 ```
 
 ---
@@ -474,22 +474,22 @@ ollama create toymodel -f toymodel.gguf
 ## Toy Model: Testing
 
 ```bash
-# Run the toy model
-ollama run toymodel "Hello"
+# Test with ollama runner directly
+ollama runner --ollama-engine --model ./toymodel.gguf --port 8080 &
 
-# Will output random tokens (untrained weights!)
-# But proves the architecture works
+# Load the model (specify cache parameters)
+curl -X POST localhost:8080/load -d '{
+  "Operation": 2, "Parallel": 1,
+  "BatchSize": 512, "KvSize": 2048
+}'
+
+# Generate tokens
+curl -X POST localhost:8080/completion \
+  -d '{"prompt": "Hello", "n_predict": 10}'
+# Output: random tokens like <0x1F37><0x9B3>... (untrained!)
 ```
 
-```go
-// Or via SDK
-client, _ := api.ClientFromEnvironment()
-req := &api.GenerateRequest{
-    Model:  "toymodel",
-    Prompt: "Hello",
-}
-client.Generate(ctx, req, printFunc)
-```
+This proves the GGUF structure is valid and the architecture works.
 
 ---
 

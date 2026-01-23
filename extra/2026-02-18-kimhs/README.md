@@ -2,6 +2,10 @@
 
 > A 20-30 minute technical presentation condensed from a 3-hour workshop
 
+## TODO
+
+* [ ] fix broken toy model example
+
 ## Overview
 
 This presentation traces the complete journey of a prompt through Ollama's internals, from API request to streamed response. It's designed for a technical audience familiar with basic ML concepts.
@@ -69,12 +73,21 @@ go run 04_gguf_reader.go ~/.ollama/models/blobs/sha256-<hash>
 # Install gguf package
 pip install gguf numpy
 
-# Create toy model
-python 05_toy_model.py
+# Create toy model with realistic dimensions
+python 05_toy_model.py --hidden-dim 512 --n-heads 8 --vocab-size 32000
 
-# Import into Ollama
-ollama create toymodel -f toymodel.gguf
-ollama run toymodel "Hello"
+# Test directly with ollama runner (recommended for toy models)
+ollama runner --ollama-engine --model ./toymodel.gguf --port 8080 &
+sleep 2
+
+# Load the model
+curl -X POST localhost:8080/load -d '{"Operation": 2, "Parallel": 1, "BatchSize": 512, "KvSize": 2048}'
+
+# Generate tokens (will be random garbage - untrained weights!)
+curl -X POST localhost:8080/completion -d '{"prompt": "Hello", "n_predict": 10}'
+
+# Clean up
+pkill -f "port 8080"
 ```
 
 ### Shell Scripts
