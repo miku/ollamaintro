@@ -1,0 +1,51 @@
+# Modelfile.example
+#
+# Example Modelfile for creating a custom Ollama model.
+# Similar to a Dockerfile but for language models.
+#
+# Usage:
+#   ollama create mymodel -f Modelfile.example
+
+# Base model - can be a model name or path to GGUF file
+FROM gemma3:270m
+
+# Alternative: use a local GGUF file
+# FROM ./toymodel.gguf
+
+# Set the model parameters
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+PARAMETER repeat_penalty 1.1
+PARAMETER num_ctx 4096
+
+# Set the system prompt
+SYSTEM """You are a helpful coding assistant. You provide clear, concise explanations and well-commented code examples. You prefer simple solutions over complex ones."""
+
+# Custom template (optional - uses model default if not specified)
+# Gemma format example:
+# TEMPLATE """<start_of_turn>user
+# {{ if .System }}{{ .System }}
+# {{ end }}{{ .Prompt }}<end_of_turn>
+# <start_of_turn>model
+# """
+
+# License information
+LICENSE """MIT License - This is an example Modelfile for educational purposes."""
+
+# Message examples (for few-shot prompting)
+MESSAGE user "How do I read a file in Python?"
+MESSAGE assistant """Here's how to read a file in Python:
+
+```python
+# Read entire file
+with open('filename.txt', 'r') as f:
+    content = f.read()
+
+# Read line by line
+with open('filename.txt', 'r') as f:
+    for line in f:
+        print(line.strip())
+```
+
+The `with` statement ensures the file is properly closed after reading."""
